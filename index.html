@@ -1118,6 +1118,12 @@ input::placeholder { color: #3A4A5E; }
       </div>
     </div>
 
+    <div style="margin-top:1.25rem;">
+      <label for="api-key">Anthropic API Key</label>
+      <input type="password" id="api-key" placeholder="sk-ant-..." style="width:100%; background:#0D1117; border:1px solid #2A3547; border-radius:2px; color:#fff; font-family:'Barlow',sans-serif; font-size:14px; padding:0.6rem 0.75rem;">
+      <div style="margin-top:0.4rem; font-size:11px; color:#3A4A5E; line-height:1.5;">Your key is used only in your browser and never stored or sent anywhere except directly to Anthropic. Get one at <a href="https://console.anthropic.com" target="_blank" style="color:var(--cobalt); text-decoration:none;">console.anthropic.com</a></div>
+    </div>
+
     <button class="generate-btn" id="gen-btn" onclick="generateSite()">Generate Briefing Site</button>
     <div class="error-msg" id="error-msg"></div>
   </div>
@@ -1329,6 +1335,8 @@ async function generateSite() {
   const briefText = document.getElementById('brief-text').value.trim();
   contactName = document.getElementById('contact-name').value.trim() || 'Shawn Banerji';
   contactEmail = document.getElementById('contact-email').value.trim() || 'caldwell.com';
+  const apiKey = document.getElementById('api-key').value.trim();
+  if (!apiKey || !apiKey.startsWith('sk-ant-')) { showError('Please enter a valid Anthropic API key (starts with sk-ant-).'); return; }
 
   let briefContent = '';
   if (pasteActive) {
@@ -1477,7 +1485,12 @@ Return this exact JSON structure (all fields required):
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 4000,
