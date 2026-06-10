@@ -12,1169 +12,301 @@
   --lime: #91D62D;
   --silver: #747F8A;
   --gold: #FFD100;
-  --turquoise: #00C2BD;
+  --teal: #00C2BD;
   --white: #FFFFFF;
-  --off-white: #F7F8FA;
-  --text-dark: #1A2332;
+  --ink: #1A2332;
+  --paper: #F7F8FA;
+  --rule: #E4E8EF;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Barlow',sans-serif;background:#0C111A;color:var(--white);min-height:100vh;}
 
-body {
-  font-family: 'Barlow', sans-serif;
-  background: #0D1117;
-  color: var(--white);
-  min-height: 100vh;
-}
+/* ─── INPUT ─── */
+#input-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1rem;}
+.e-logo{display:flex;align-items:center;gap:10px;margin-bottom:2rem;}
+.e-logo-bar{width:5px;height:36px;background:var(--cobalt);}
+.e-logo-text{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;text-transform:uppercase;letter-spacing:2px;}
+.e-logo-text span{color:var(--cobalt);}
+.e-sub{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--silver);margin-bottom:0.4rem;text-align:center;}
+.e-head{font-family:'Barlow Condensed',sans-serif;font-size:clamp(26px,4.5vw,42px);font-weight:700;text-transform:uppercase;text-align:center;line-height:1.05;margin-bottom:2.5rem;max-width:580px;}
+.card{background:#151C28;border:1px solid #243040;width:100%;max-width:660px;padding:1.75rem;}
+label{display:block;font-size:10px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--silver);margin-bottom:0.45rem;}
+label .opt{color:#2E3E52;font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;}
+textarea,input[type=text],input[type=email],input[type=url]{width:100%;background:#0C111A;border:1px solid #243040;color:var(--white);font-family:'Barlow',sans-serif;font-size:13px;padding:0.6rem 0.75rem;transition:border-color .2s;}
+textarea{min-height:180px;resize:vertical;line-height:1.6;}
+textarea:focus,input:focus{outline:none;border-color:var(--cobalt);}
+textarea::placeholder,input::placeholder{color:#2E3E52;}
+.upload-zone{border:1px dashed #243040;padding:2rem 1rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-top:0;}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--cobalt);background:rgba(48,79,252,.04);}
+.upload-icon{font-size:28px;color:var(--silver);margin-bottom:0.5rem;}
+.upload-txt{font-size:12px;color:var(--silver);line-height:1.5;}
+.upload-txt strong{color:var(--white);}
+#file-input{display:none;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.25rem;}
+.links-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;}
+.add-btn{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:transparent;border:1px solid #243040;color:var(--silver);padding:3px 10px;cursor:pointer;transition:all .2s;}
+.add-btn:hover{border-color:var(--cobalt);color:var(--cobalt);}
+.link-row{display:grid;grid-template-columns:90px 1fr 1fr auto;gap:5px;margin-bottom:5px;align-items:center;}
+.link-row select{background:#0C111A;border:1px solid #243040;color:var(--silver);font-family:'Barlow',sans-serif;font-size:12px;padding:0.5rem 0.4rem;}
+.link-row select:focus{outline:none;border-color:var(--cobalt);}
+.link-del{background:transparent;border:1px solid #243040;color:var(--silver);font-size:14px;padding:0.42rem 0.6rem;cursor:pointer;transition:all .2s;}
+.link-del:hover{border-color:#E24B4A;color:#E24B4A;}
+.links-empty{font-size:11px;color:#2E3E52;padding:0.4rem 0;}
+.gen-btn{width:100%;margin-top:1.5rem;background:var(--cobalt);border:none;color:var(--white);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:0.95rem;cursor:pointer;transition:background .2s;}
+.gen-btn:hover{background:#1F3CE8;}
+.gen-btn:disabled{background:#243040;color:var(--silver);cursor:not-allowed;}
+.err{font-size:12px;color:#E24B4A;margin-top:0.6rem;display:none;}
+.field-gap{margin-top:1.25rem;}
 
-/* ── INPUT SCREEN ── */
-#input-screen {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
-  background: #0D1117;
-}
+/* ─── LOADING ─── */
+#loading-screen{display:none;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;gap:1.25rem;background:#0C111A;}
+.l-bar{width:5px;height:32px;background:var(--cobalt);animation:pulse 1.2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;height:32px;}50%{opacity:.35;height:18px;}}
+.l-label{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;text-transform:uppercase;letter-spacing:2px;}
+.l-status{font-size:12px;color:var(--silver);}
+.prog-track{width:220px;height:2px;background:#243040;}
+.prog-fill{height:100%;background:var(--cobalt);width:0%;transition:width .5s ease;}
 
-.engine-logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 2.5rem;
-}
-
-.logo-bar {
-  width: 6px;
-  height: 40px;
-  background: var(--cobalt);
-  border-radius: 1px;
-}
-
-.logo-text {
-  font-family: 'Barlow Condensed', Impact, sans-serif;
-  font-size: 22px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--white);
-}
-
-.logo-text span { color: var(--cobalt); }
-
-.engine-tagline {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--silver);
-  margin-bottom: 0.5rem;
-  text-align: center;
-}
-
-.engine-headline {
-  font-family: 'Barlow Condensed', Impact, sans-serif;
-  font-size: clamp(28px, 5vw, 44px);
-  font-weight: 700;
-  text-transform: uppercase;
-  text-align: center;
-  color: var(--white);
-  line-height: 1.05;
-  margin-bottom: 2.5rem;
-  max-width: 600px;
-}
-
-.input-card {
-  background: #161C26;
-  border: 1px solid #2A3547;
-  border-radius: 4px;
-  padding: 2rem;
-  width: 100%;
-  max-width: 680px;
-}
-
-.input-tabs {
-  display: flex;
-  gap: 0;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid #2A3547;
-}
-
-.tab-btn {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  background: transparent;
-  border: none;
-  color: var(--silver);
-  padding: 0.75rem 1.25rem 0.75rem 0;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  transition: color 0.2s;
-}
-
-.tab-btn.active {
-  color: var(--white);
-  border-bottom-color: var(--cobalt);
-}
-
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
-
-label {
-  display: block;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--silver);
-  margin-bottom: 0.5rem;
-}
-
-textarea {
-  width: 100%;
-  min-height: 200px;
-  background: #0D1117;
-  border: 1px solid #2A3547;
-  border-radius: 2px;
-  color: var(--white);
-  font-family: 'Barlow', sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
-  padding: 1rem;
-  resize: vertical;
-  transition: border-color 0.2s;
-}
-
-textarea:focus { outline: none; border-color: var(--cobalt); }
-textarea::placeholder { color: #3A4A5E; }
-
-.upload-zone {
-  border: 1px dashed #2A3547;
-  border-radius: 2px;
-  padding: 2.5rem 1rem;
-  text-align: center;
-  cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
-}
-
-.upload-zone:hover, .upload-zone.dragging {
-  border-color: var(--cobalt);
-  background: rgba(48, 79, 252, 0.05);
-}
-
-.upload-icon {
-  font-size: 32px;
-  color: var(--silver);
-  margin-bottom: 0.75rem;
-}
-
-.upload-text {
-  font-size: 13px;
-  color: var(--silver);
-  line-height: 1.6;
-}
-
-.upload-text strong { color: var(--white); }
-
-#file-input { display: none; }
-#file-name {
-  font-size: 12px;
-  color: var(--lime);
-  margin-top: 0.75rem;
-  font-weight: 500;
-}
-
-.contact-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-input[type="text"], input[type="email"] {
-  width: 100%;
-  background: #0D1117;
-  border: 1px solid #2A3547;
-  border-radius: 2px;
-  color: var(--white);
-  font-family: 'Barlow', sans-serif;
-  font-size: 14px;
-  padding: 0.6rem 0.75rem;
-  transition: border-color 0.2s;
-}
-
-input[type="text"]:focus, input[type="email"]:focus {
-  outline: none;
-  border-color: var(--cobalt);
-}
-
-input::placeholder { color: #3A4A5E; }
-
-.generate-btn {
-  width: 100%;
-  margin-top: 1.5rem;
-  background: var(--cobalt);
-  border: none;
-  border-radius: 2px;
-  color: var(--white);
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 1rem;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
-}
-
-.generate-btn:hover { background: #1F3CE8; }
-.generate-btn:active { transform: scale(0.99); }
-.generate-btn:disabled { background: #2A3547; color: var(--silver); cursor: not-allowed; }
-
-.error-msg {
-  font-size: 12px;
-  color: #E24B4A;
-  margin-top: 0.75rem;
-  display: none;
-}
-
-/* LINK ROWS */
-.link-row {
-  display: grid;
-  grid-template-columns: 100px 1fr 1fr auto;
-  gap: 6px;
-  margin-bottom: 6px;
-  align-items: center;
-}
-
-.link-row select {
-  background: #0D1117;
-  border: 1px solid #2A3547;
-  border-radius: 2px;
-  color: var(--silver);
-  font-family: 'Barlow', sans-serif;
-  font-size: 12px;
-  padding: 0.5rem 0.5rem;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-
-.link-row select:focus { outline: none; border-color: var(--cobalt); }
-
-.link-input, .link-note {
-  background: #0D1117;
-  border: 1px solid #2A3547;
-  border-radius: 2px;
-  color: var(--white);
-  font-family: 'Barlow', sans-serif;
-  font-size: 13px;
-  padding: 0.5rem 0.65rem;
-  transition: border-color 0.2s;
-}
-
-.link-input:focus, .link-note:focus { outline: none; border-color: var(--cobalt); }
-.link-input::placeholder, .link-note::placeholder { color: #3A4A5E; }
-
-.link-remove {
-  background: transparent;
-  border: 1px solid #2A3547;
-  color: var(--silver);
-  font-size: 14px;
-  line-height: 1;
-  padding: 0.45rem 0.6rem;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.2s;
-}
-
-.link-remove:hover { border-color: #E24B4A; color: #E24B4A; }
-
-@media (max-width: 600px) {
-  .link-row { grid-template-columns: 1fr auto; }
-  .link-row select, .link-note { display: none; }
-}
-
-/* ── LOADING ── */
-#loading-screen {
-  display: none;
-  min-height: 100vh;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 1.5rem;
-  background: #0D1117;
-}
-
-.loading-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.loading-bar-anim {
-  width: 6px;
-  height: 36px;
-  background: var(--cobalt);
-  animation: pulse-bar 1.2s ease-in-out infinite;
-}
-
-@keyframes pulse-bar {
-  0%, 100% { opacity: 1; height: 36px; }
-  50% { opacity: 0.4; height: 20px; }
-}
-
-.loading-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--white);
-}
-
-.loading-status {
-  font-size: 13px;
-  color: var(--silver);
-  letter-spacing: 0.5px;
-}
-
-.progress-track {
-  width: 240px;
-  height: 2px;
-  background: #2A3547;
-  border-radius: 1px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: var(--cobalt);
-  width: 0%;
-  transition: width 0.6s ease;
-}
-
-/* ── SITE OUTPUT ── */
-#site-screen {
-  display: none;
-  background: var(--white);
-  color: var(--text-dark);
-}
+/* ─── SITE ─── */
+#site-screen{display:none;background:var(--white);color:var(--ink);}
 
 /* NAV */
-.site-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: var(--slate);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 2rem;
-}
-
-.nav-progress {
-  position: absolute;
-  top: 0; left: 0;
-  height: 2px;
-  background: var(--lime);
-  width: 0%;
-  transition: width 0.1s linear;
-}
-
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.nav-logo-bar { width: 4px; height: 28px; background: var(--cobalt); }
-.nav-logo-text {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--white);
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.nav-link {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.65);
-  text-decoration: none;
-  border-bottom: 2px solid transparent;
-  padding-bottom: 2px;
-  transition: color 0.2s;
-}
-
-.nav-link:hover, .nav-link.active { color: var(--white); }
-.nav-link.active { border-bottom-color: var(--cobalt); }
-
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.nav-action-btn {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  border: 1px solid rgba(255,255,255,0.3);
-  background: transparent;
-  color: var(--white);
-  padding: 0.35rem 0.85rem;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: background 0.2s, border-color 0.2s;
-}
-
-.nav-action-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--white); }
-.nav-action-btn.primary { background: var(--cobalt); border-color: var(--cobalt); }
-.nav-action-btn.primary:hover { background: #1F3CE8; }
-
-.hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 4px;
-}
-
-.hamburger span {
-  width: 22px;
-  height: 2px;
-  background: var(--white);
-  border-radius: 1px;
-  transition: all 0.25s;
-}
-
-.mobile-menu {
-  display: none;
-  position: fixed;
-  top: 60px;
-  left: 0;
-  right: 0;
-  background: var(--slate);
-  z-index: 999;
-  padding: 1rem 1.5rem;
-  flex-direction: column;
-  gap: 0.75rem;
-  border-top: 1px solid rgba(255,255,255,0.1);
-}
-
-.mobile-menu.open { display: flex; }
-.mobile-menu a {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.75);
-  text-decoration: none;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
+.s-nav{position:fixed;top:0;left:0;right:0;height:58px;background:var(--slate);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 1.75rem;}
+.nav-prog{position:absolute;top:0;left:0;height:2px;background:var(--lime);width:0%;transition:width .1s linear;}
+.nav-left{display:flex;align-items:center;gap:1rem;}
+.nav-back{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.6);padding:3px 8px;cursor:pointer;transition:all .2s;}
+.nav-back:hover{color:var(--white);border-color:var(--white);}
+.nav-logo{display:flex;align-items:center;gap:7px;}
+.nav-logo-bar{width:4px;height:24px;background:var(--cobalt);}
+.nav-logo-text{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--white);}
+.nav-links{display:flex;align-items:center;gap:1.25rem;}
+.nav-link{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.55);text-decoration:none;border-bottom:2px solid transparent;padding-bottom:2px;transition:color .2s;}
+.nav-link:hover,.nav-link.on{color:var(--white);}
+.nav-link.on{border-bottom-color:var(--cobalt);}
+.nav-actions{display:flex;gap:.6rem;align-items:center;}
+.nav-btn{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border:1px solid rgba(255,255,255,.3);background:transparent;color:var(--white);padding:.32rem .8rem;cursor:pointer;transition:all .2s;}
+.nav-btn:hover{background:rgba(255,255,255,.1);}
+.nav-btn.pri{background:var(--cobalt);border-color:var(--cobalt);}
+.nav-btn.pri:hover{background:#1F3CE8;}
+.hamburger{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:3px;}
+.hamburger span{width:20px;height:2px;background:var(--white);}
+.mob-menu{display:none;position:fixed;top:58px;left:0;right:0;background:var(--slate);z-index:999;padding:.75rem 1.5rem;flex-direction:column;gap:.6rem;border-top:1px solid rgba(255,255,255,.08);}
+.mob-menu.open{display:flex;}
+.mob-menu a{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.7);text-decoration:none;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.06);}
 
 /* SECTIONS */
-.site-section {
-  padding: 6rem 2rem 5rem;
-  max-width: 1100px;
-  margin: 0 auto;
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.site-section.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.section-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--silver);
-  margin-bottom: 1rem;
-}
-
-.section-headline {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(28px, 4vw, 42px);
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--slate);
-  line-height: 1.05;
-  margin-bottom: 1.5rem;
-}
-
-.section-headline span { color: var(--cobalt); }
-
-.section-body {
-  font-size: 15px;
-  line-height: 1.75;
-  color: #3A4A5E;
-  max-width: 740px;
-}
-
-.section-divider {
-  width: 100%;
-  height: 1px;
-  background: #E8ECF2;
-}
+.sec{padding:5.5rem 2rem 4.5rem;max-width:1080px;margin:0 auto;opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease;}
+.sec.vis{opacity:1;transform:translateY(0);}
+.sec-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--silver);margin-bottom:.9rem;}
+.sec-head{font-family:'Barlow Condensed',sans-serif;font-size:clamp(26px,3.5vw,40px);font-weight:700;text-transform:uppercase;color:var(--slate);line-height:1.05;margin-bottom:1.25rem;}
+.sec-head em{color:var(--cobalt);font-style:normal;}
+.sec-body{font-size:15px;line-height:1.8;color:#3A4A5E;max-width:720px;}
+.sec-body strong{color:var(--slate);font-weight:600;}
+.rule{width:100%;height:1px;background:var(--rule);}
+.full-bleed{max-width:100%;padding-left:0;padding-right:0;}
 
 /* HERO */
-#s-hero {
-  padding: 0;
-  max-width: 100%;
-  background: var(--slate);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-bg-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(48,79,252,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(48,79,252,0.06) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-
-.hero-cobalt-bar {
-  position: absolute;
-  top: 0; left: 0; bottom: 0;
-  width: 6px;
-  background: var(--cobalt);
-}
-
-.hero-content {
-  position: relative;
-  padding: 5rem 3rem 4rem;
-  max-width: 1100px;
-  margin: 0 auto;
-  width: 100%;
-  opacity: 1;
-  transform: none;
-}
-
-.hero-confidential {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--lime);
-  margin-bottom: 1.5rem;
-  display: inline-block;
-  border: 1px solid var(--lime);
-  padding: 3px 10px;
-}
-
-.hero-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(36px, 6vw, 68px);
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--white);
-  line-height: 1;
-  margin-bottom: 1.5rem;
-  max-width: 900px;
-}
-
-.hero-title span { color: var(--cobalt); }
-
-.hero-subtitle {
-  font-size: 15px;
-  color: rgba(255,255,255,0.6);
-  max-width: 560px;
-  line-height: 1.65;
-  margin-bottom: 2.5rem;
-}
-
-.hero-meta {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.hero-meta-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.hero-meta-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--silver);
-}
-
-.hero-meta-value {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--white);
-}
+#s-hero{padding:0;max-width:100%;background:var(--slate);min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;}
+.hero-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(48,79,252,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(48,79,252,.05) 1px,transparent 1px);background-size:56px 56px;}
+.hero-cobalt{position:absolute;top:0;left:0;bottom:0;width:5px;background:var(--cobalt);}
+.hero-inner{position:relative;padding:5rem 3rem 4rem;max-width:1080px;margin:0 auto;width:100%;}
+.hero-conf{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--lime);border:1px solid var(--lime);padding:3px 9px;display:inline-block;margin-bottom:1.5rem;}
+.hero-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(34px,5.5vw,64px);font-weight:700;text-transform:uppercase;color:var(--white);line-height:.98;margin-bottom:1.5rem;max-width:860px;}
+.hero-title em{color:var(--cobalt);font-style:normal;}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.55);max-width:520px;line-height:1.65;margin-bottom:2.5rem;}
+.hero-meta{display:flex;gap:2.5rem;flex-wrap:wrap;}
+.meta-item{display:flex;flex-direction:column;gap:3px;}
+.meta-lbl{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--silver);}
+.meta-val{font-size:13px;font-weight:500;color:var(--white);}
 
 /* STAT BLOCKS */
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1px;
-  background: #E8ECF2;
-  margin: 2.5rem 0;
-  border: 1px solid #E8ECF2;
-}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:2.5rem 0;}
+.stat-block{background:var(--white);padding:1.75rem 1.5rem;}
+.stat-num{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:700;color:var(--cobalt);line-height:1;margin-bottom:5px;}
+.stat-lbl{font-size:11px;color:var(--silver);line-height:1.4;font-weight:500;}
+.stat-ctx{font-size:10px;color:var(--cobalt);margin-top:4px;font-weight:600;}
 
-.stat-block {
-  background: var(--white);
-  padding: 1.75rem 1.5rem;
-}
+/* INSIGHT CALLOUT — pull-quote style */
+.insight-box{border-left:4px solid var(--cobalt);padding:1.25rem 1.5rem;background:#F0F4FF;margin:2rem 0;}
+.insight-box p{font-size:14px;line-height:1.7;color:var(--slate);font-weight:500;}
+.insight-box cite{display:block;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--silver);margin-top:.6rem;font-style:normal;}
 
-.stat-number {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 42px;
-  font-weight: 700;
-  color: var(--cobalt);
-  line-height: 1;
-  margin-bottom: 6px;
-}
+/* FORCE-FIELD — what's pushing/pulling on this hire */
+.force-field{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);margin:2rem 0;}
+.force-col{background:var(--white);padding:1.75rem;}
+.force-head{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:1rem;}
+.force-head.push{color:var(--cobalt);}
+.force-head.pull{color:#C0392B;}
+.force-item{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:.85rem;font-size:13px;color:#3A4A5E;line-height:1.55;}
+.force-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.force-dot.push{background:var(--cobalt);}
+.force-dot.pull{background:#C0392B;}
 
-.stat-label {
-  font-size: 12px;
-  color: var(--silver);
-  line-height: 1.4;
-  font-weight: 500;
-}
+/* MARKET LANDSCAPE CHART — horizontal bar chart SVG */
+.chart-wrap{margin:2rem 0;overflow-x:auto;}
+.chart-title{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--silver);margin-bottom:.75rem;}
 
-/* VENN DIAGRAM */
-.venn-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 2.5rem 0;
-}
+/* COMPETENCY RADAR — spider chart SVG */
+.radar-wrap{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;margin:2rem 0;}
+.radar-legend{display:flex;flex-direction:column;gap:.75rem;}
+.legend-item{display:flex;align-items:center;gap:.6rem;font-size:12px;color:#3A4A5E;line-height:1.4;}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 
-/* COMPARISON TABLE */
-.comparison-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 2rem 0;
-  font-size: 14px;
-}
+/* FAILURE MODES — redesigned as a 2-col risk matrix */
+.risk-matrix{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);margin:2rem 0;}
+.risk-card{background:var(--white);padding:1.75rem;}
+.risk-card.wrong{border-top:3px solid #C0392B;}
+.risk-card.right{border-top:3px solid var(--cobalt);}
+.risk-tag{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:2px 7px;display:inline-block;margin-bottom:.75rem;}
+.risk-tag.wrong{background:#FDF0EF;color:#C0392B;}
+.risk-tag.right{background:#EEF1FF;color:var(--cobalt);}
+.risk-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;text-transform:uppercase;color:var(--slate);margin-bottom:.5rem;}
+.risk-desc{font-size:13px;color:#3A4A5E;line-height:1.6;}
+.risk-signals{margin-top:1rem;}
+.risk-signals-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--silver);margin-bottom:.4rem;}
+.risk-signal{font-size:12px;color:#3A4A5E;padding:.25rem 0;border-bottom:1px solid var(--rule);line-height:1.4;}
+.risk-signal:last-child{border-bottom:none;}
 
-.comparison-table th {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  padding: 1rem 1.25rem;
-  text-align: left;
-  border-bottom: 2px solid #E8ECF2;
-}
+/* DIFF BLOCKS */
+.diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin:2rem 0;}
+.diff-block{background:var(--white);padding:2rem 1.75rem;position:relative;}
+.diff-accent{position:absolute;top:0;left:0;width:4px;height:100%;background:var(--cobalt);}
+.diff-num{font-family:'Barlow Condensed',sans-serif;font-size:44px;font-weight:700;color:rgba(48,79,252,.1);line-height:1;margin-bottom:.4rem;}
+.diff-title{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;color:var(--slate);margin-bottom:.6rem;}
+.diff-body{font-size:13px;color:#3A4A5E;line-height:1.65;}
 
-.comparison-table th:first-child { color: var(--silver); }
-.comparison-table th:nth-child(2) { background: #FFF5F5; color: #A32D2D; }
-.comparison-table th:nth-child(3) { background: #FFF8E1; color: #856000; }
-.comparison-table th:nth-child(4) { background: #F0F7E6; color: #3B6D11; }
-
-.comparison-table td {
-  padding: 0.9rem 1.25rem;
-  border-bottom: 1px solid #E8ECF2;
-  vertical-align: top;
-  line-height: 1.55;
-  color: #3A4A5E;
-}
-
-.comparison-table tr:last-child td { border-bottom: none; }
-.comparison-table td:first-child { font-weight: 600; color: var(--slate); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-.comparison-table td:nth-child(2) { background: #FFFAFA; }
-.comparison-table td:nth-child(3) { background: #FFFDF5; }
-.comparison-table td:nth-child(4) { background: #F8FCF2; }
-
-/* DIFFERENTIATORS */
-.diff-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 0;
-  border: 1px solid #E8ECF2;
-  margin: 2rem 0;
-}
-
-.diff-block {
-  padding: 2rem 1.75rem;
-  border-right: 1px solid #E8ECF2;
-  position: relative;
-}
-
-.diff-block:last-child { border-right: none; }
-
-.diff-number {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 48px;
-  font-weight: 700;
-  color: rgba(48,79,252,0.12);
-  line-height: 1;
-  margin-bottom: 0.5rem;
-}
-
-.diff-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--slate);
-  margin-bottom: 0.75rem;
-}
-
-.diff-body { font-size: 13px; color: #3A4A5E; line-height: 1.65; }
-
-.diff-accent {
-  position: absolute;
-  top: 0; left: 0;
-  width: 4px;
-  height: 100%;
-  background: var(--cobalt);
-}
+/* CANDIDATE CARDS — denser, more intelligence-grade */
+.cand-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:2rem 0;}
+.cand-card{background:var(--white);padding:1.5rem;}
+.cand-initial{width:36px;height:36px;background:rgba(48,79,252,.09);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--cobalt);margin-bottom:.9rem;}
+.cand-type{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;color:var(--slate);line-height:1.2;margin-bottom:.4rem;}
+.cand-why{font-size:12px;color:#3A4A5E;line-height:1.55;margin-bottom:.75rem;}
+.cand-why strong{color:var(--slate);font-weight:600;}
+.tag{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;background:rgba(48,79,252,.07);color:var(--cobalt);padding:2px 6px;display:inline-block;margin-right:3px;margin-top:3px;}
 
 /* TIMELINE */
-.timeline-wrap {
-  position: relative;
-  margin: 2.5rem 0;
-  overflow-x: auto;
-}
-
-.timeline-track {
-  display: flex;
-  position: relative;
-  min-width: 600px;
-  padding-bottom: 1rem;
-}
-
-.timeline-line {
-  position: absolute;
-  top: 28px;
-  left: 0; right: 0;
-  height: 2px;
-  background: #E8ECF2;
-}
-
-.timeline-progress {
-  position: absolute;
-  top: 28px;
-  left: 0;
-  height: 2px;
-  background: var(--cobalt);
-  width: 0%;
-  transition: width 1.5s ease;
-}
-
-.timeline-phase {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  padding-top: 0.25rem;
-}
-
-.timeline-node {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--white);
-  border: 2px solid #E8ECF2;
-  position: relative;
-  z-index: 1;
-  margin-bottom: 1rem;
-  transition: border-color 0.3s, background 0.3s;
-}
-
-.timeline-node.filled {
-  background: var(--cobalt);
-  border-color: var(--cobalt);
-}
-
-.timeline-phase-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--slate);
-  text-align: center;
-  margin-bottom: 4px;
-}
-
-.timeline-phase-week {
-  font-size: 11px;
-  color: var(--silver);
-  text-align: center;
-  margin-bottom: 6px;
-}
-
-.timeline-phase-desc {
-  font-size: 11px;
-  color: #3A4A5E;
-  text-align: center;
-  line-height: 1.45;
-  padding: 0 0.5rem;
-}
-
-/* CANDIDATE CARDS */
-.candidate-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1px;
-  background: #E8ECF2;
-  border: 1px solid #E8ECF2;
-  margin: 2rem 0;
-}
-
-.candidate-card {
-  background: var(--white);
-  padding: 1.5rem;
-}
-
-.candidate-initial {
-  width: 40px;
-  height: 40px;
-  background: rgba(48,79,252,0.1);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--cobalt);
-  margin-bottom: 1rem;
-}
-
-.candidate-archetype {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--slate);
-  margin-bottom: 0.5rem;
-  line-height: 1.2;
-}
-
-.candidate-desc {
-  font-size: 12px;
-  color: var(--silver);
-  line-height: 1.5;
-}
-
-.candidate-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 0.75rem;
-}
-
-.tag {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  background: rgba(48,79,252,0.08);
-  color: var(--cobalt);
-  padding: 2px 7px;
-  border-radius: 2px;
-}
+.tl-wrap{overflow-x:auto;margin:2rem 0;}
+.tl-track{display:flex;position:relative;min-width:560px;padding-bottom:1rem;}
+.tl-line{position:absolute;top:26px;left:0;right:0;height:2px;background:var(--rule);}
+.tl-prog{position:absolute;top:26px;left:0;height:2px;background:var(--cobalt);width:0%;transition:width 1.4s ease;}
+.tl-phase{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;}
+.tl-node{width:14px;height:14px;border-radius:50%;background:var(--white);border:2px solid var(--rule);position:relative;z-index:1;margin-bottom:.9rem;transition:background .3s,border-color .3s;}
+.tl-node.on{background:var(--cobalt);border-color:var(--cobalt);}
+.tl-name{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--slate);text-align:center;margin-bottom:3px;letter-spacing:.5px;}
+.tl-wk{font-size:10px;color:var(--silver);text-align:center;margin-bottom:5px;}
+.tl-desc{font-size:10px;color:#3A4A5E;text-align:center;line-height:1.45;padding:0 .4rem;}
 
 /* CTA CLOSE */
-#s-close {
-  max-width: 100%;
-  padding: 0;
-}
+#s-close{padding:0;max-width:100%;opacity:1;transform:none;}
+.cta-block{background:var(--cobalt);padding:4rem 3rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;}
+.cta-lbl{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.4rem;}
+.cta-name{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;text-transform:uppercase;color:var(--white);margin-bottom:.4rem;}
+.cta-line{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:3px;}
+.cta-btn{display:inline-block;margin-top:1.25rem;background:var(--white);color:var(--cobalt);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:.7rem 1.6rem;text-decoration:none;}
+.cta-btn:hover{background:rgba(255,255,255,.9);}
+.cta-quote{max-width:320px;font-size:13px;color:rgba(255,255,255,.6);line-height:1.65;text-align:right;font-style:italic;}
+.s-footer{background:var(--slate);padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.s-footer-conf{font-size:11px;color:rgba(255,255,255,.35);flex:1;text-align:center;}
+.s-footer-tag{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--lime);}
 
-.close-cta-block {
-  background: var(--cobalt);
-  padding: 4rem 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.close-left {}
-
-.close-start-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.6);
-  margin-bottom: 0.5rem;
-}
-
-.close-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 32px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--white);
-  margin-bottom: 0.5rem;
-}
-
-.close-contact-line {
-  font-size: 14px;
-  color: rgba(255,255,255,0.75);
-  margin-bottom: 3px;
-}
-
-.close-cta-btn {
-  display: inline-block;
-  margin-top: 1.25rem;
-  background: var(--white);
-  color: var(--cobalt);
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  padding: 0.75rem 1.75rem;
-  text-decoration: none;
-  border-radius: 2px;
-  transition: background 0.2s;
-}
-
-.close-cta-btn:hover { background: rgba(255,255,255,0.9); }
-
-.site-footer {
-  background: var(--slate);
-  padding: 1.75rem 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.footer-confidential {
-  font-size: 11px;
-  color: rgba(255,255,255,0.4);
-  flex: 1;
-  text-align: center;
-}
-
-.footer-tagline {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--lime);
-}
-
-/* BACK BUTTON */
-.back-to-input {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.3);
-  color: rgba(255,255,255,0.7);
-  padding: 0.3rem 0.75rem;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.2s;
-}
-
-.back-to-input:hover { color: var(--white); border-color: var(--white); }
-
-/* ── PRINT / PDF SLIDES ── */
+/* ─── PRINT ─── */
 @media print {
-  @page {
-    size: A4 landscape;
-    margin: 0;
-  }
-
-  body { background: white; color: #1A2332; }
-  #input-screen, #loading-screen { display: none !important; }
-  #site-screen { display: block !important; }
-
-  .site-nav { display: none !important; }
-  .mobile-menu { display: none !important; }
-  .back-to-input { display: none !important; }
-  .nav-actions { display: none !important; }
-
-  .site-section {
-    opacity: 1 !important;
-    transform: none !important;
-    padding: 2.5cm 2cm;
-    page-break-after: always;
-    break-after: page;
-    max-width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  #s-hero {
-    min-height: 100vh;
-    page-break-after: always;
-    break-after: page;
-    padding: 0;
-  }
-
-  .hero-content {
-    padding: 3cm 2.5cm;
-  }
-
-  .hero-title { font-size: 48px; }
-  .section-headline { font-size: 32px; }
-
-  .stat-grid { break-inside: avoid; }
-  .comparison-table { font-size: 11px; break-inside: avoid; }
-  .timeline-wrap { break-inside: avoid; }
-  .diff-grid { break-inside: avoid; }
-  .candidate-grid { break-inside: avoid; }
-
-  #s-close {
-    page-break-after: avoid;
-    break-after: avoid;
-  }
-
-  .timeline-progress { width: 100% !important; }
-  .timeline-node { border-color: var(--cobalt) !important; background: var(--cobalt) !important; }
-
-  a { color: inherit !important; text-decoration: none !important; }
-
-  .close-cta-block { background: #304FFC !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .site-footer { background: #38495E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  #s-hero { background: #38495E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .hero-bg-grid { display: none; }
-  .diff-accent { background: #304FFC !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  @page{size:A4 landscape;margin:0;}
+  body{background:white;}
+  #input-screen,#loading-screen{display:none!important;}
+  #site-screen{display:block!important;}
+  .s-nav,.mob-menu,.nav-back,.nav-actions{display:none!important;}
+  .sec{opacity:1!important;transform:none!important;padding:2cm 1.75cm;page-break-after:always;break-after:page;max-width:100%;min-height:100vh;display:flex;flex-direction:column;justify-content:center;}
+  #s-hero{min-height:100vh;page-break-after:always;break-after:page;padding:0;}
+  #s-close{page-break-after:avoid;break-after:avoid;}
+  .hero-inner{padding:2.5cm 2cm;}
+  .hero-title{font-size:46px;}
+  .sec-head{font-size:32px;}
+  .stat-row,.risk-matrix,.diff-grid,.cand-grid,.force-field{break-inside:avoid;}
+  .tl-prog{width:100%!important;}
+  .tl-node{background:var(--cobalt)!important;border-color:var(--cobalt)!important;}
+  .cta-block{background:#304FFC!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .s-footer{background:#38495E!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  #s-hero{background:#38495E!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .diff-accent,.hero-cobalt,.nav-logo-bar{background:#304FFC!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .insight-box{background:#EEF1FF!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  a{color:inherit!important;text-decoration:none!important;}
 }
 
-/* ── MOBILE ── */
-@media (max-width: 768px) {
-  .nav-links { display: none; }
-  .nav-actions .nav-action-btn:not(.primary) { display: none; }
-  .hamburger { display: flex; }
-
-  .hero-content { padding: 4rem 1.5rem 3rem; }
-  .hero-title { font-size: 32px; }
-  .hero-meta { gap: 1.25rem; }
-
-  .site-section { padding: 4rem 1.25rem 3rem; }
-
-  .contact-row { grid-template-columns: 1fr; }
-
-  .comparison-table { font-size: 12px; }
-  .comparison-table th, .comparison-table td { padding: 0.7rem 0.75rem; }
-
-  .close-cta-block { padding: 2.5rem 1.5rem; flex-direction: column; }
-  .site-footer { flex-direction: column; text-align: center; padding: 1.5rem; }
-
-  .diff-grid { grid-template-columns: 1fr; }
-  .diff-block { border-right: none; border-bottom: 1px solid #E8ECF2; }
-  .diff-block:last-child { border-bottom: none; }
-
-  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .nav-actions .nav-btn:not(.pri){display:none;}
+  .hero-inner{padding:4rem 1.5rem 3rem;}
+  .hero-title{font-size:30px;}
+  .sec{padding:4rem 1.25rem 3rem;}
+  .row2{grid-template-columns:1fr;}
+  .link-row{grid-template-columns:1fr auto;}
+  .link-row select,.link-row .link-note{display:none;}
+  .risk-matrix{grid-template-columns:1fr;}
+  .diff-grid{grid-template-columns:1fr;}
+  .diff-block{border-right:none;border-bottom:1px solid var(--rule);}
+  .force-field{grid-template-columns:1fr;}
+  .radar-wrap{grid-template-columns:1fr;}
+  .cta-block{flex-direction:column;padding:2.5rem 1.5rem;}
+  .cta-quote{text-align:left;}
+  .s-footer{flex-direction:column;text-align:center;padding:1.5rem;}
 }
-
-@media (max-width: 480px) {
-  .stat-grid { grid-template-columns: 1fr 1fr; }
-  .candidate-grid { grid-template-columns: 1fr 1fr; }
-  .timeline-phase-desc { display: none; }
+@media(max-width:480px){
+  .stat-row{grid-template-columns:1fr 1fr;}
+  .cand-grid{grid-template-columns:1fr 1fr;}
+  .tl-desc{display:none;}
 }
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .site-section { opacity: 1 !important; transform: none !important; transition: none !important; }
-  .timeline-progress { transition: none !important; }
-  .loading-bar-anim { animation: none !important; }
+@media(prefers-reduced-motion:reduce){
+  .sec{opacity:1!important;transform:none!important;transition:none!important;}
+  .tl-prog{transition:none!important;}
+  .l-bar{animation:none!important;}
 }
 </style>
 </head>
 <body>
 
-<!-- ── INPUT SCREEN ── -->
+<!-- ─── INPUT ─── -->
 <div id="input-screen">
-  <div class="engine-logo">
-    <div class="logo-bar"></div>
-    <div class="logo-text">CALDWELL <span>BRIEF</span> ENGINE</div>
+  <div class="e-logo">
+    <div class="e-logo-bar"></div>
+    <div class="e-logo-text">CALDWELL <span>BRIEF</span> ENGINE</div>
   </div>
+  <p class="e-sub">Tech, Digital &amp; Data Practice</p>
+  <h1 class="e-head">Drop in a brief.<br>Get a boardroom-ready site.</h1>
 
-  <p class="engine-tagline">Tech, Digital &amp; Data Practice</p>
-  <h1 class="engine-headline">Drop in a brief.<br>Get a boardroom-ready site.</h1>
-
-  <div class="input-card">
-
-    <!-- BRIEF TEXT (optional) -->
-    <div style="margin-bottom:1.25rem;">
-      <label for="brief-text">Brief Content <span style="color:#3A4A5E; font-weight:400; text-transform:none; letter-spacing:0;">— optional if uploading a file</span></label>
-      <textarea id="brief-text" placeholder="Paste position spec, client brief, or background on the search. Include company context, the role, what good looks like, candidate considerations. The more detail, the sharper the output."></textarea>
+  <div class="card">
+    <div class="field-gap" style="margin-top:0;">
+      <label for="brief-text">Brief Content <span class="opt">— optional if uploading a file</span></label>
+      <textarea id="brief-text" placeholder="Paste position spec, client brief, or background on the search. Include company context, the role, what good looks like, and any known candidate considerations."></textarea>
     </div>
 
-    <!-- FILE UPLOAD (optional) -->
-    <div style="margin-bottom:1.5rem;">
-      <label>Attach File <span style="color:#3A4A5E; font-weight:400; text-transform:none; letter-spacing:0;">— optional, PDF or DOCX</span></label>
-      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" ondragleave="this.classList.remove('dragging')">
-        <div class="upload-icon" id="upload-icon">↑</div>
-        <div class="upload-text" id="upload-text"><strong>Click to attach</strong> or drag and drop<br>PDF or DOCX, max 10MB</div>
-        <div id="file-name"></div>
+    <div class="field-gap">
+      <label>Attach File <span class="opt">— PDF or DOCX, optional</span></label>
+      <div class="upload-zone" id="upload-zone"
+        onclick="document.getElementById('file-input').click()"
+        ondragover="handleDragOver(event)"
+        ondrop="handleDrop(event)"
+        ondragleave="this.classList.remove('drag')">
+        <div class="upload-icon" id="up-icon">↑</div>
+        <div class="upload-txt" id="up-txt"><strong>Click to attach</strong> or drag and drop<br>PDF or DOCX, max 10MB</div>
       </div>
       <input type="file" id="file-input" accept=".pdf,.docx,.doc,.txt" onchange="handleFileSelect(event)">
     </div>
 
-    <!-- LINKS -->
-    <div style="margin-bottom:1.5rem;">
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6rem;">
-        <label style="margin-bottom:0;">Featured Links <span style="color:#3A4A5E; font-weight:400; text-transform:none; letter-spacing:0;">— optional, press / media / sources</span></label>
-        <button onclick="addLink()" style="font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; background:transparent; border:1px solid #2A3547; color:var(--silver); padding:3px 10px; cursor:pointer; border-radius:2px; transition:all 0.2s;" onmouseover="this.style.borderColor='var(--cobalt)';this.style.color='var(--cobalt)'" onmouseout="this.style.borderColor='#2A3547';this.style.color='var(--silver)'">+ Add Link</button>
+    <div class="field-gap">
+      <div class="links-header">
+        <label style="margin-bottom:0;">Featured Links <span class="opt">— press, LinkedIn, reports</span></label>
+        <button class="add-btn" onclick="addLink()">+ Add Link</button>
       </div>
-      <div id="links-container">
-        <!-- link rows injected here -->
-      </div>
-      <div id="links-empty" style="font-size:12px; color:#3A4A5E; padding:0.5rem 0;">No links added. Add press coverage, LinkedIn profiles, company pages, or industry reports to enrich the briefing.</div>
+      <div id="links-container"></div>
+      <div id="links-empty" class="links-empty">No links added. Add press coverage, company pages, or industry reports to enrich the briefing.</div>
     </div>
 
-    <!-- PARTNER -->
-    <div class="contact-row" style="margin-bottom:0;">
+    <div class="row2">
       <div>
         <label for="contact-name">Partner Name</label>
         <input type="text" id="contact-name" placeholder="e.g. Shawn Banerji">
@@ -1185,30 +317,28 @@ input::placeholder { color: #3A4A5E; }
       </div>
     </div>
 
-    <button class="generate-btn" id="gen-btn" onclick="generateSite()">Generate Briefing Site</button>
-    <div class="error-msg" id="error-msg"></div>
+    <button class="gen-btn" id="gen-btn" onclick="generateSite()">Generate Briefing Site</button>
+    <div class="err" id="err-msg"></div>
   </div>
 </div>
 
-<!-- ── LOADING SCREEN ── -->
+<!-- ─── LOADING ─── -->
 <div id="loading-screen">
-  <div class="loading-logo">
-    <div class="loading-bar-anim"></div>
-    <div class="loading-label">Caldwell Brief Engine</div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="l-bar"></div>
+    <div class="l-label">Caldwell Brief Engine</div>
   </div>
-  <div class="loading-status" id="loading-status">Parsing brief...</div>
-  <div class="progress-track">
-    <div class="progress-fill" id="progress-fill"></div>
-  </div>
+  <div class="l-status" id="l-status">Parsing brief...</div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
 </div>
 
-<!-- ── SITE SCREEN ── -->
+<!-- ─── SITE ─── -->
 <div id="site-screen">
 
-  <nav class="site-nav" id="site-nav">
-    <div class="nav-progress" id="nav-progress"></div>
-    <div style="display:flex; align-items:center; gap:1rem;">
-      <button class="back-to-input" onclick="backToInput()">← New Brief</button>
+  <nav class="s-nav" id="s-nav">
+    <div class="nav-prog" id="nav-prog"></div>
+    <div class="nav-left">
+      <button class="nav-back" onclick="backToInput()">← New Brief</button>
       <div class="nav-logo">
         <div class="nav-logo-bar"></div>
         <div class="nav-logo-text">Caldwell</div>
@@ -1217,229 +347,220 @@ input::placeholder { color: #3A4A5E; }
     <div class="nav-links" id="nav-links">
       <a href="#s-context" class="nav-link">Context</a>
       <a href="#s-imperative" class="nav-link">Imperative</a>
-      <a href="#s-paradox" class="nav-link">Profile</a>
-      <a href="#s-failures" class="nav-link">Failure Modes</a>
+      <a href="#s-landscape" class="nav-link">Landscape</a>
+      <a href="#s-profile" class="nav-link">Profile</a>
+      <a href="#s-risk" class="nav-link">Risk</a>
       <a href="#s-caldwell" class="nav-link">Caldwell</a>
       <a href="#s-process" class="nav-link">Process</a>
     </div>
     <div class="nav-actions">
-      <button class="nav-action-btn" onclick="exportPDF()">Export PDF</button>
-      <button class="nav-action-btn primary" id="nav-cta-btn" onclick="navCTA()">Start Conversation</button>
+      <button class="nav-btn" onclick="window.print()">Export PDF</button>
+      <button class="nav-btn pri" id="nav-cta">Start Conversation</button>
     </div>
-    <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <button class="hamburger" onclick="toggleMob()" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </nav>
 
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="#s-context" onclick="closeMobileMenu()">Context</a>
-    <a href="#s-imperative" onclick="closeMobileMenu()">Imperative</a>
-    <a href="#s-paradox" onclick="closeMobileMenu()">Profile</a>
-    <a href="#s-failures" onclick="closeMobileMenu()">Failure Modes</a>
-    <a href="#s-caldwell" onclick="closeMobileMenu()">Caldwell</a>
-    <a href="#s-process" onclick="closeMobileMenu()">Process</a>
-    <a href="#s-close" onclick="closeMobileMenu()">Close</a>
+  <div class="mob-menu" id="mob-menu">
+    <a href="#s-context" onclick="closeMob()">Context</a>
+    <a href="#s-imperative" onclick="closeMob()">Imperative</a>
+    <a href="#s-landscape" onclick="closeMob()">Landscape</a>
+    <a href="#s-profile" onclick="closeMob()">Profile</a>
+    <a href="#s-risk" onclick="closeMob()">Risk</a>
+    <a href="#s-caldwell" onclick="closeMob()">Caldwell</a>
+    <a href="#s-process" onclick="closeMob()">Process</a>
   </div>
 
   <!-- HERO -->
-  <section id="s-hero" style="padding-top:60px;">
-    <div class="hero-bg-grid"></div>
-    <div class="hero-cobalt-bar"></div>
-    <div class="hero-content">
-      <div class="hero-confidential">Confidential — For Authorized Review Only</div>
+  <section id="s-hero" style="padding-top:58px;">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-cobalt"></div>
+    <div class="hero-inner">
+      <div class="hero-conf">Confidential — For Authorized Review Only</div>
       <h1 class="hero-title" id="hero-title">Loading...</h1>
-      <p class="hero-subtitle" id="hero-subtitle"></p>
+      <p class="hero-sub" id="hero-sub"></p>
       <div class="hero-meta" id="hero-meta"></div>
     </div>
   </section>
 
   <!-- CONTEXT -->
-  <section class="site-section" id="s-context">
-    <div class="section-label">The Inflection Point</div>
-    <h2 class="section-headline" id="context-headline"></h2>
-    <div class="section-body" id="context-body"></div>
-    <div class="stat-grid" id="stat-grid"></div>
-  </section>
-  <div class="section-divider"></div>
-
-  <!-- IMPERATIVE -->
-  <section class="site-section" id="s-imperative">
-    <div class="section-label">The Strategic Imperative</div>
-    <h2 class="section-headline" id="imperative-headline"></h2>
-    <div class="section-body" id="imperative-body"></div>
-    <div id="imperative-points" style="margin-top:2rem; display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:1px; background:#E8ECF2; border:1px solid #E8ECF2;"></div>
-  </section>
-  <div class="section-divider"></div>
-
-  <!-- TALENT PARADOX -->
-  <section class="site-section" id="s-paradox">
-    <div class="section-label">The Talent Paradox</div>
-    <h2 class="section-headline" id="paradox-headline"></h2>
-    <div class="section-body" id="paradox-body"></div>
-    <div class="venn-wrap" id="venn-wrap"></div>
-  </section>
-  <div class="section-divider"></div>
-
-  <!-- FAILURE MODES -->
-  <section class="site-section" id="s-failures">
-    <div class="section-label">Failure Modes</div>
-    <h2 class="section-headline" id="failures-headline"></h2>
-    <div class="section-body" id="failures-body"></div>
-    <div id="failures-table-wrap" style="overflow-x:auto; margin-top:1.5rem;"></div>
-  </section>
-  <div class="section-divider"></div>
-
-  <!-- CALDWELL -->
-  <section class="site-section" id="s-caldwell">
-    <div class="section-label">The Caldwell Difference</div>
-    <h2 class="section-headline" id="caldwell-headline"></h2>
-    <div class="section-body" id="caldwell-body"></div>
-    <div class="diff-grid" id="diff-grid"></div>
-    <div style="margin-top:1.5rem;">
-      <div class="section-label" style="margin-bottom:1rem;">Initial Candidate Landscape</div>
-      <div class="candidate-grid" id="candidate-grid"></div>
+  <section class="sec" id="s-context">
+    <div class="sec-label">The Inflection Point</div>
+    <h2 class="sec-head" id="ctx-head"></h2>
+    <div class="sec-body" id="ctx-body"></div>
+    <div class="stat-row" id="stat-row"></div>
+    <div class="insight-box" id="ctx-insight" style="display:none;">
+      <p id="ctx-insight-txt"></p>
+      <cite id="ctx-insight-src"></cite>
     </div>
   </section>
-  <div class="section-divider"></div>
+  <div class="rule"></div>
+
+  <!-- IMPERATIVE -->
+  <section class="sec" id="s-imperative">
+    <div class="sec-label">The Strategic Imperative</div>
+    <h2 class="sec-head" id="imp-head"></h2>
+    <div class="sec-body" id="imp-body"></div>
+    <div class="force-field" id="force-field"></div>
+  </section>
+  <div class="rule"></div>
+
+  <!-- MARKET LANDSCAPE -->
+  <section class="sec" id="s-landscape">
+    <div class="sec-label">Market Landscape</div>
+    <h2 class="sec-head" id="land-head"></h2>
+    <div class="sec-body" id="land-body"></div>
+    <div class="chart-wrap" id="chart-wrap"></div>
+  </section>
+  <div class="rule"></div>
+
+  <!-- CANDIDATE PROFILE -->
+  <section class="sec" id="s-profile">
+    <div class="sec-label">The Talent Paradox</div>
+    <h2 class="sec-head" id="prof-head"></h2>
+    <div class="sec-body" id="prof-body"></div>
+    <div class="radar-wrap" id="radar-wrap"></div>
+  </section>
+  <div class="rule"></div>
+
+  <!-- RISK -->
+  <section class="sec" id="s-risk">
+    <div class="sec-label">Failure Modes</div>
+    <h2 class="sec-head" id="risk-head"></h2>
+    <div class="sec-body" id="risk-body"></div>
+    <div class="risk-matrix" id="risk-matrix"></div>
+  </section>
+  <div class="rule"></div>
+
+  <!-- CALDWELL -->
+  <section class="sec" id="s-caldwell">
+    <div class="sec-label">The Caldwell Difference</div>
+    <h2 class="sec-head" id="cald-head"></h2>
+    <div class="sec-body" id="cald-body"></div>
+    <div class="diff-grid" id="diff-grid"></div>
+    <div id="cand-section">
+      <div class="sec-label" style="margin-top:2rem;margin-bottom:1rem;">Initial Candidate Landscape</div>
+      <div class="cand-grid" id="cand-grid"></div>
+    </div>
+  </section>
+  <div class="rule"></div>
 
   <!-- PROCESS -->
-  <section class="site-section" id="s-process">
-    <div class="section-label">Search Process</div>
-    <h2 class="section-headline" id="process-headline"></h2>
-    <div class="section-body" id="process-body"></div>
-    <div class="timeline-wrap" id="timeline-wrap"></div>
+  <section class="sec" id="s-process">
+    <div class="sec-label">Search Process</div>
+    <h2 class="sec-head" id="proc-head"></h2>
+    <div class="sec-body" id="proc-body"></div>
+    <div class="tl-wrap" id="tl-wrap"></div>
   </section>
 
   <!-- CLOSE -->
-  <section id="s-close" class="site-section" style="padding:0; opacity:1; transform:none;">
-    <div class="close-cta-block" id="close-cta-block">
-      <div class="close-left">
-        <div class="close-start-label">Start the Conversation</div>
-        <div class="close-name" id="close-name">Caldwell Partners</div>
-        <div class="close-contact-line" id="close-role">Tech, Digital &amp; Data Practice</div>
-        <div class="close-contact-line" id="close-email-line"></div>
-        <a class="close-cta-btn" id="close-cta-link" href="#">Schedule a Conversation</a>
+  <section id="s-close" class="sec" style="padding:0;opacity:1;transform:none;">
+    <div class="cta-block" id="cta-block">
+      <div>
+        <div class="cta-lbl">Start the Conversation</div>
+        <div class="cta-name" id="cta-name">Caldwell Partners</div>
+        <div class="cta-line" id="cta-role">Tech, Digital &amp; Data Practice</div>
+        <div class="cta-line" id="cta-email"></div>
+        <a class="cta-btn" id="cta-link" href="#">Schedule a Conversation</a>
       </div>
-      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.5rem;">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <div style="width:4px; height:36px; background:rgba(255,255,255,0.4);"></div>
-          <div style="font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:rgba(255,255,255,0.9);">Caldwell</div>
+      <div style="text-align:right;">
+        <div style="display:flex;align-items:center;gap:7px;justify-content:flex-end;margin-bottom:.75rem;">
+          <div style="width:4px;height:32px;background:rgba(255,255,255,.35);"></div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.85);">Caldwell</div>
         </div>
-        <div id="close-quote" style="max-width:340px; font-size:13px; color:rgba(255,255,255,0.6); line-height:1.6; text-align:right;"></div>
+        <p class="cta-quote" id="cta-quote"></p>
       </div>
     </div>
-    <div class="site-footer">
-      <div style="display:flex; align-items:center; gap:8px;">
-        <div style="width:3px; height:22px; background:var(--cobalt);"></div>
-        <div style="font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--white);">Caldwell</div>
+    <div class="s-footer">
+      <div style="display:flex;align-items:center;gap:7px;">
+        <div style="width:3px;height:20px;background:var(--cobalt);"></div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--white);">Caldwell</div>
       </div>
-      <div class="footer-confidential" id="footer-confidential">Confidential. Prepared exclusively for [Client]. Not for distribution. © 2025 Caldwell Partners.</div>
-      <div class="footer-tagline">Talent Transforms</div>
+      <div class="s-footer-conf" id="footer-conf">Confidential. Prepared exclusively for [Client]. Not for distribution. © 2025 Caldwell Partners.</div>
+      <div class="s-footer-tag">Talent Transforms</div>
     </div>
   </section>
 
-</div>
+</div><!-- end site-screen -->
 
 <script>
 let uploadedFileData = null;
-let uploadedFileName = null;
 let linkCount = 0;
+let contactName = '';
+let contactEmail = '';
 
+/* ── LINK ROWS ── */
 function addLink() {
-  const container = document.getElementById('links-container');
-  const empty = document.getElementById('links-empty');
-  if (empty) empty.style.display = 'none';
-
+  const c = document.getElementById('links-container');
+  const e = document.getElementById('links-empty');
+  if (e) e.style.display = 'none';
   linkCount++;
   const id = linkCount;
   const row = document.createElement('div');
   row.className = 'link-row';
-  row.id = 'link-row-' + id;
-  row.innerHTML = `
-    <select class="link-type">
-      <option value="press">Press</option>
-      <option value="linkedin">LinkedIn</option>
-      <option value="company">Company</option>
-      <option value="report">Report</option>
-      <option value="source">Source</option>
-    </select>
-    <input type="url" class="link-input" placeholder="https://..." style="width:100%;">
-    <input type="text" class="link-note" placeholder="Optional note (e.g. Q3 2024 earnings)" style="width:100%;">
-    <button class="link-remove" onclick="removeLink(${id})">×</button>
-  `;
-  container.appendChild(row);
+  row.id = 'lr-' + id;
+  row.innerHTML =
+    '<select class="link-type">' +
+      '<option value="press">Press</option>' +
+      '<option value="linkedin">LinkedIn</option>' +
+      '<option value="company">Company</option>' +
+      '<option value="report">Report</option>' +
+      '<option value="source">Source</option>' +
+    '</select>' +
+    '<input type="url" class="link-input" placeholder="https://..." style="width:100%;">' +
+    '<input type="text" class="link-note" placeholder="Note (e.g. Q3 2024)" style="width:100%;">' +
+    '<button class="link-del" onclick="removeLink(' + id + ')">×</button>';
+  c.appendChild(row);
 }
-
 function removeLink(id) {
-  const row = document.getElementById('link-row-' + id);
-  if (row) row.remove();
-  const container = document.getElementById('links-container');
-  const empty = document.getElementById('links-empty');
-  if (empty && container.children.length === 0) empty.style.display = 'block';
-}
-let contactEmail = '';
-let contactName = '';
-
-function switchTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (i===0&&tab==='paste')||(i===1&&tab==='upload')));
-  document.getElementById('tab-paste').classList.toggle('active', tab==='paste');
-  document.getElementById('tab-upload').classList.toggle('active', tab==='upload');
+  const r = document.getElementById('lr-' + id);
+  if (r) r.remove();
+  const c = document.getElementById('links-container');
+  const e = document.getElementById('links-empty');
+  if (e && c.children.length === 0) e.style.display = 'block';
 }
 
-function handleDragOver(e) {
-  e.preventDefault();
-  document.getElementById('upload-zone').classList.add('dragging');
+/* ── FILE ── */
+function handleDragOver(ev) { ev.preventDefault(); document.getElementById('upload-zone').classList.add('drag'); }
+function handleDrop(ev) {
+  ev.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag');
+  const f = ev.dataTransfer.files[0];
+  if (f) processFile(f);
 }
-
-function handleDrop(e) {
-  e.preventDefault();
-  document.getElementById('upload-zone').classList.remove('dragging');
-  const file = e.dataTransfer.files[0];
-  if (file) processFile(file);
-}
-
-function handleFileSelect(e) {
-  const file = e.target.files[0];
-  if (file) processFile(file);
-}
-
+function handleFileSelect(ev) { const f = ev.target.files[0]; if (f) processFile(f); }
 function processFile(file) {
-  uploadedFileName = file.name;
-  document.getElementById('file-name').textContent = '✓ ' + file.name;
-  const icon = document.getElementById('upload-icon');
-  const txt = document.getElementById('upload-text');
-  if (icon) icon.textContent = '✓';
-  if (icon) icon.style.color = 'var(--lime)';
-  if (txt) txt.innerHTML = '<strong style="color:var(--lime)">File attached:</strong> ' + file.name + '<br><span style="color:var(--silver);font-size:11px;">Click to replace</span>';
+  const icon = document.getElementById('up-icon');
+  const txt = document.getElementById('up-txt');
+  icon.textContent = '✓';
+  icon.style.color = 'var(--lime)';
+  txt.innerHTML = '<strong style="color:var(--lime)">Attached:</strong> ' + file.name + '<br><span style="font-size:11px;color:var(--silver);">Click to replace</span>';
   const reader = new FileReader();
   if (file.type === 'application/pdf') {
-    reader.onload = (e) => {
-      uploadedFileData = { type: 'pdf', data: e.target.result.split(',')[1] };
-    };
+    reader.onload = function(e) { uploadedFileData = { type: 'pdf', data: e.target.result.split(',')[1] }; };
     reader.readAsDataURL(file);
   } else {
-    reader.onload = (e) => {
-      uploadedFileData = { type: 'text', data: e.target.result };
-    };
+    reader.onload = function(e) { uploadedFileData = { type: 'text', data: e.target.result }; };
     reader.readAsText(file);
   }
 }
 
+/* ── PROGRESS ── */
 function setProgress(pct, status) {
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('loading-status').textContent = status;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('l-status').textContent = status;
 }
 
+/* ── GENERATE ── */
 async function generateSite() {
   const briefText = document.getElementById('brief-text').value.trim();
   contactName = document.getElementById('contact-name').value.trim() || 'Shawn Banerji';
   contactEmail = document.getElementById('contact-email').value.trim() || 'caldwell.com';
 
-
-  // Collect brief content — both optional but need at least one
   let briefContent = briefText;
   if (!briefText && !uploadedFileData) {
-    showError('Please add a brief (text or file) before generating.');
+    showErr('Please add a brief (text or file) before generating.');
     return;
   }
   if (!briefContent && uploadedFileData && uploadedFileData.type === 'text') {
@@ -1447,440 +568,353 @@ async function generateSite() {
   }
   if (!briefContent) briefContent = '';
 
-  // Collect links
   const linkEls = document.querySelectorAll('.link-input');
   const linkTypeEls = document.querySelectorAll('.link-type');
   const linkNoteEls = document.querySelectorAll('.link-note');
   const links = [];
-  linkEls.forEach((el, i) => {
+  linkEls.forEach(function(el, i) {
     const url = el.value.trim();
     if (url) {
       const type = linkTypeEls[i] ? linkTypeEls[i].value : 'source';
       const note = linkNoteEls[i] ? linkNoteEls[i].value.trim() : '';
-      links.push({ url, type, note });
+      links.push({ url: url, type: type, note: note });
     }
   });
 
-  hideError();
+  hideErr();
   document.getElementById('input-screen').style.display = 'none';
   document.getElementById('loading-screen').style.display = 'flex';
 
-  const loadingSteps = [
-    [15, 'Parsing company context...'],
-    [30, 'Identifying strategic imperatives...'],
-    [45, 'Mapping talent paradox...'],
-    [60, 'Constructing failure mode analysis...'],
-    [75, 'Drafting Caldwell differentiators...'],
-    [88, 'Building search process timeline...'],
-    [95, 'Finalising site content...'],
+  const steps = [
+    [12, 'Parsing company context...'],
+    [25, 'Mapping market landscape...'],
+    [38, 'Identifying strategic pressure...'],
+    [52, 'Building competency model...'],
+    [65, 'Constructing risk analysis...'],
+    [78, 'Drafting Caldwell positioning...'],
+    [90, 'Synthesising search process...'],
+    [97, 'Rendering site...']
   ];
-
-  let stepIndex = 0;
-  const stepInterval = setInterval(() => {
-    if (stepIndex < loadingSteps.length) {
-      setProgress(loadingSteps[stepIndex][0], loadingSteps[stepIndex][1]);
-      stepIndex++;
-    }
-  }, 1200);
+  let si = 0;
+  const iv = setInterval(function() {
+    if (si < steps.length) { setProgress(steps[si][0], steps[si][1]); si++; }
+  }, 1400);
 
   try {
-    const systemPrompt = `You are a senior partner at Caldwell Partners, a top-tier executive search firm. You produce intelligence-grade briefing content — precise, specific, insight-dense, and written in the voice of a McKinsey senior partner. You never use AI writing clichés.
+    const sys = 'You are a senior partner at Caldwell Partners writing an executive search intelligence brief. Your writing standard: McKinsey Quarterly, not LinkedIn. Every sentence carries weight. Every data point is specific and defensible. You reason from evidence to conclusion, not from conclusion to evidence.\n\nHard rules:\n- No em dashes. Rewrite any sentence that needs one.\n- Banned phrases: "delve", "it\'s worth noting", "game-changer", "unlock", "leverage" (verb), "transformative", "cutting-edge", "harness", "navigating", "robust", "seamless", "in today\'s landscape", "unprecedented", "pivotal", "crucial", "mission-critical".\n- No sentence under 8 words as a standalone paragraph.\n- No passive voice where active is possible.\n- Insight before assertion. State the implication, then the evidence.\n- Specificity over generality. "A 14-month average time-to-hire for this profile" beats "talent is scarce".\n\nReturn ONLY valid JSON. No markdown, no preamble.';
 
-Banned phrases and constructions: em dashes, "delve into", "it's worth noting", "game-changer", "unlock", "leverage" (as verb), "transformative", "cutting-edge", "harness", "in today's landscape", "navigating", "robust", "seamless". No sentence under 8 words standing alone as a paragraph.
-
-Return ONLY a valid JSON object. No markdown fences, no preamble.`;
-
-    // Build links section for prompt
     const linksSection = links.length > 0
-      ? '\n\nFEATURED LINKS (incorporate these into the briefing — cite press coverage, reference sources, use company URLs for accurate facts):\n' +
+      ? '\n\nFEATURED LINKS — treat these as source material. Reference press coverage, pull specific facts from company URLs, cite reports by name:\n' +
         links.map(function(l) { return '- [' + l.type.toUpperCase() + '] ' + l.url + (l.note ? ' (' + l.note + ')' : ''); }).join('\n')
       : '';
 
-    const userPrompt = `Based on this executive search brief, generate a complete Caldwell Partners briefing site. Extract all available facts and synthesise what's missing with expert judgment. Every section should be insight-dense, specific, and defensible.
+    const prompt = 'Generate a complete intelligence-grade Caldwell Partners executive search briefing from this input. Where facts are not provided, synthesise expert judgment from industry knowledge — but flag synthesised data with "(est.)" in any stat labels.\n\nINPUT:\n' + briefContent + linksSection + '\n\nReturn this JSON (all fields required):\n\n{\n  "company": "Company name",\n  "role": "Role title",\n  "hero_title": "THE [COMPANY] [ROLE] APPOINTMENT: [SHARP IMPLICATION]. All caps. Max 12 words. Make it specific — not generic.",\n  "hero_sub": "One sentence: what this briefing covers and who prepared it.",\n  "hero_meta": [\n    {"label": "Industry", "value": "..."},\n    {"label": "Revenue / Scale", "value": "..."},\n    {"label": "Search Type", "value": "Retained Executive Search"},\n    {"label": "Prepared By", "value": "Caldwell Partners"}\n  ],\n  "stats": [\n    {"num": "...", "label": "...", "ctx": "what this means"},\n    {"num": "...", "label": "...", "ctx": "what this means"},\n    {"num": "...", "label": "...", "ctx": "what this means"},\n    {"num": "...", "label": "...", "ctx": "what this means"}\n  ],\n  "ctx_head": "WHAT CHANGED, AND WHEN (all caps, max 8 words, specific)",\n  "ctx_body": "3-4 sentences. Company at scale, recent inflection point, what specifically changed. No generic industry framing — this company, this moment.",\n  "ctx_insight": "One sharp sentence that a board member would quote. A specific implication, not a platitude.",\n  "ctx_insight_src": "Source or framing — e.g. \'Caldwell analysis\' or \'Company 10-K, FY2024\'",\n  "imp_head": "THE COST OF INACTION (all caps, max 8 words)",\n  "imp_body": "2-3 sentences: specific consequences of delay or wrong hire. Quantify where possible.",\n  "forces": {\n    "push_head": "Why This Must Happen Now",\n    "push_items": [\n      {"text": "Specific pressure point 1 — include a data point or named competitor"},\n      {"text": "Specific pressure point 2"},\n      {"text": "Specific pressure point 3"}\n    ],\n    "pull_head": "What Makes This Hard",\n    "pull_items": [\n      {"text": "Specific constraint 1 — include a number or named tension"},\n      {"text": "Specific constraint 2"},\n      {"text": "Specific constraint 3"}\n    ]\n  },\n  "land_head": "THE TALENT MARKET FOR THIS ROLE",\n  "land_body": "2-3 sentences on where qualified candidates actually sit — which sectors, which companies, why the obvious pools are wrong.",\n  "market_bars": [\n    {"label": "Sector or talent pool name", "value": 85, "note": "Why they\'re relevant"},\n    {"label": "...", "value": 62, "note": "..."},\n    {"label": "...", "value": 45, "note": "..."},\n    {"label": "...", "value": 30, "note": "..."},\n    {"label": "...", "value": 18, "note": "..."}\n  ],\n  "chart_title": "CANDIDATE POOL RELEVANCE BY SECTOR (Caldwell assessment)",\n  "prof_head": "THE THREE THINGS THAT MUST ALL BE TRUE",\n  "prof_body": "2-3 sentences: what makes this search technically hard. Not \'talent is scarce\' but the specific combination that does not exist at volume.",\n  "radar_axes": [\n    {"label": "Competency 1", "ideal": 95, "typical": 50},\n    {"label": "Competency 2", "ideal": 85, "typical": 70},\n    {"label": "Competency 3", "ideal": 90, "typical": 40},\n    {"label": "Competency 4", "ideal": 75, "typical": 65},\n    {"label": "Competency 5", "ideal": 80, "typical": 55}\n  ],\n  "radar_note": "One sentence explaining what the gap between \'ideal\' and \'typical candidate\' means for the search.",\n  "risk_head": "WHAT GOES WRONG, AND WHY",\n  "risk_body": "1-2 sentences: why wrong hires happen in this search category specifically.",\n  "wrong_archetypes": [\n    {\n      "name": "Archetype name",\n      "why_attractive": "Why they look right on paper",\n      "why_wrong": "The specific way they fail in this role",\n      "signals": ["Resume signal that flags this", "Interview signal", "Reference signal"]\n    },\n    {\n      "name": "Second archetype",\n      "why_attractive": "...",\n      "why_wrong": "...",\n      "signals": ["...", "...", "..."]\n    }\n  ],\n  "right_archetype": {\n    "name": "The profile that works",\n    "description": "2-3 sentences: what the right person actually looks like. Specific, not a list of adjectives.",\n    "signals": ["What they\'ve actually done", "How they think about the problem", "How they lead in ambiguity"]\n  },\n  "cald_head": "WHY CALDWELL FOR THIS SEARCH",\n  "cald_body": "1-2 sentences specific to this search — not generic Caldwell positioning.",\n  "differentiators": [\n    {"num": "01", "title": "FUNCTIONAL DEPTH", "body": "Specific to this search type and sector."},\n    {"num": "02", "title": "OPERATOR NETWORK", "body": "Specific candidate networks relevant to this role."},\n    {"num": "03", "title": "PATTERN RECOGNITION", "body": "Specific insight from analogous searches that shapes assessment here."}\n  ],\n  "candidates": [\n    {"initial": "A", "archetype": "Archetype label", "why": "One sentence — the specific reason this profile is worth pursuing. Include a sector or company type.", "tension": "The one thing to probe", "tags": ["Tag1", "Tag2", "Tag3"]},\n    {"initial": "B", "archetype": "...", "why": "...", "tension": "...", "tags": ["...", "..."]},\n    {"initial": "C", "archetype": "...", "why": "...", "tension": "...", "tags": ["...", "..."]},\n    {"initial": "D", "archetype": "...", "why": "...", "tension": "...", "tags": ["...", "..."]},\n    {"initial": "E", "archetype": "...", "why": "...", "tension": "...", "tags": ["...", "..."]}\n  ],\n  "proc_head": "FIVE PHASES. ONE PRECISION OUTCOME.",\n  "proc_body": "1-2 sentences on what is non-standard about this process for this particular search.",\n  "phases": [\n    {"name": "Deep Brief", "week": "Week 1", "desc": "Specific to this search: what the brief phase must uncover."},\n    {"name": "Market Map", "week": "Weeks 1-2", "desc": "Which sectors and companies Caldwell will map first, and why."},\n    {"name": "Assessment", "week": "Weeks 2-4", "desc": "Which competencies are tested and how, specific to this role."},\n    {"name": "Shortlist", "week": "Week 5", "desc": "What a calibrated slate looks like for this search."},\n    {"name": "Close", "week": "Weeks 6-10", "desc": "The specific risk points in offer and onboarding for this profile."}\n  ],\n  "close_quote": "One sentence. The precise cost of getting this wrong — specific to this company and role. No clichés.",\n  "footer_conf": "Confidential. Prepared exclusively for [Company]. Not for distribution. \u00a9 2025 Caldwell Partners."\n}';
 
-BRIEF:
-${briefContent}${linksSection}
-
-Return this exact JSON structure (all fields required):
-
-{
-  "company": "Company name",
-  "role": "Role title (e.g. CIDO, CTO)",
-  "prepared_for": "Name/title of recipient if identifiable, else company name",
-  "hero_title": "A sharp, specific headline for this search (e.g. THE AI-DEFINED RAILROAD: WHY CSX'S NEXT CIDO IS ITS MOST STRATEGIC HIRE). All caps. Max 12 words.",
-  "hero_subtitle": "One sentence: what this briefing is and who prepared it.",
-  "hero_meta": [
-    {"label": "Industry", "value": "..."},
-    {"label": "Revenue", "value": "..."},
-    {"label": "Search Type", "value": "..."},
-    {"label": "Prepared By", "value": "Caldwell Partners"}
-  ],
-  "stats": [
-    {"number": "...", "label": "..."},
-    {"number": "...", "label": "..."},
-    {"number": "...", "label": "..."},
-    {"number": "...", "label": "..."}
-  ],
-  "context_headline": "WHAT MAKES THIS MOMENT DIFFERENT (all caps, max 8 words)",
-  "context_body": "3-4 sentences on company context: scale, recent inflection, what changed. Specific facts only.",
-  "imperative_headline": "THE CASE FOR ACTING NOW (all caps, max 8 words)",
-  "imperative_body": "2-3 sentences: what happens if this hire is delayed or wrong.",
-  "imperative_points": [
-    {"title": "POINT ONE", "body": "..."},
-    {"title": "POINT TWO", "body": "..."},
-    {"title": "POINT THREE", "body": "..."}
-  ],
-  "paradox_headline": "WHY THIS HIRE IS HARD (all caps, max 8 words)",
-  "paradox_body": "2-3 sentences: what makes this role uniquely difficult to fill.",
-  "venn_circles": [
-    {"label": "Circle 1 label", "description": "Brief description"},
-    {"label": "Circle 2 label", "description": "Brief description"},
-    {"label": "Circle 3 label", "description": "Brief description"}
-  ],
-  "venn_center": "THE OPERATOR (or appropriate label for the ideal candidate intersection)",
-  "failures_headline": "THE WRONG HIRE COSTS MORE THAN THE SEARCH (all caps, max 10 words)",
-  "failures_body": "1-2 sentences framing why failure modes matter here specifically.",
-  "failure_modes": [
-    {
-      "criterion": "Criterion",
-      "archetype_a": {"name": "Archetype A Name", "description": "What they look like and why they fail"},
-      "archetype_b": {"name": "Archetype B Name", "description": "What they look like and why they fail"},
-      "ideal": {"name": "The Ideal", "description": "What the right candidate looks like on this criterion"}
-    },
-    {
-      "criterion": "Technical Fluency",
-      "archetype_a": {"name": "...", "description": "..."},
-      "archetype_b": {"name": "...", "description": "..."},
-      "ideal": {"name": "...", "description": "..."}
-    },
-    {
-      "criterion": "Organisational Credibility",
-      "archetype_a": {"name": "...", "description": "..."},
-      "archetype_b": {"name": "...", "description": "..."},
-      "ideal": {"name": "...", "description": "..."}
-    }
-  ],
-  "caldwell_headline": "SPECIAL FORCES, NOT THE REGULAR ARMY (all caps, max 8 words)",
-  "caldwell_body": "1-2 sentences positioning Caldwell for this specific search.",
-  "differentiators": [
-    {"number": "01", "title": "FUNCTIONAL DEPTH", "body": "Specific to this search: why Caldwell's Tech, Digital and Data practice is the right team."},
-    {"number": "02", "title": "OPERATOR NETWORK", "body": "Specific candidate network that is relevant to this role and industry."},
-    {"number": "03", "title": "PATTERN RECOGNITION", "body": "Specific insight from past searches in this domain that shapes how Caldwell assesses."}
-  ],
-  "candidates": [
-    {"initial": "A", "archetype": "Archetype 1 name", "description": "One sentence on what makes them interesting.", "tags": ["Tag1", "Tag2"]},
-    {"initial": "B", "archetype": "Archetype 2 name", "description": "One sentence on what makes them interesting.", "tags": ["Tag1", "Tag2"]},
-    {"initial": "C", "archetype": "Archetype 3 name", "description": "One sentence on what makes them interesting.", "tags": ["Tag1", "Tag2"]},
-    {"initial": "D", "archetype": "Archetype 4 name", "description": "One sentence on what makes them interesting.", "tags": ["Tag1", "Tag2"]},
-    {"initial": "E", "archetype": "Archetype 5 name", "description": "One sentence on what makes them interesting.", "tags": ["Tag1", "Tag2"]}
-  ],
-  "process_headline": "A FIVE-PHASE APPROACH TO A PRECISION SEARCH",
-  "process_body": "1-2 sentences: what makes this process right for this specific search.",
-  "phases": [
-    {"name": "Deep Brief", "week": "Week 1", "description": "Align on success criteria, stakeholder interviews, culture mapping."},
-    {"name": "Market Map", "week": "Weeks 1-2", "description": "Identify target pool across relevant sectors and geographies."},
-    {"name": "Assessment", "week": "Weeks 2-4", "description": "Structured competency interviews and capability verification."},
-    {"name": "Shortlist", "week": "Week 5", "description": "Calibrated slate of 4-6 candidates with Caldwell evaluations."},
-    {"name": "Selection Support", "week": "Weeks 6-10", "description": "Reference strategy, offer structuring, onboarding advisory."}
-  ],
-  "close_quote": "One sharp closing sentence about what is at stake with this hire. Specific to the company and role. No clichés.",
-  "footer_confidential": "Confidential. Prepared exclusively for [Company]. Not for distribution. © 2025 Caldwell Partners."
-}`;
-
-    // Build message — include PDF if uploaded
-    let messageContent;
+    let msgContent;
     if (uploadedFileData && uploadedFileData.type === 'pdf') {
-      messageContent = [
+      msgContent = [
         { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: uploadedFileData.data } },
-        { type: 'text', text: userPrompt }
+        { type: 'text', text: prompt }
       ];
     } else {
-      messageContent = userPrompt;
+      msgContent = prompt;
     }
-    const messages = [{ role: 'user', content: messageContent }];
 
-    const response = await fetch('https://caldwell-brief-proxy.caldwellbriefs.workers.dev', {
+    const resp = await fetch('https://caldwell-brief-proxy.caldwellbriefs.workers.dev', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 4000,
-        system: systemPrompt,
-        messages
+        max_tokens: 6000,
+        system: sys,
+        messages: [{ role: 'user', content: msgContent }]
       })
     });
 
-    const data = await response.json();
+    const data = await resp.json();
+    if (!resp.ok || data.error) throw new Error(data.error && data.error.message ? data.error.message : 'API error');
 
-    if (!response.ok || data.error) {
-      throw new Error(data.error?.message || 'API error');
-    }
+    clearInterval(iv);
+    setProgress(100, 'Rendering...');
 
-    clearInterval(stepInterval);
-    setProgress(100, 'Rendering site...');
+    let raw = '';
+    for (const b of data.content) { if (b.type === 'text') raw += b.text; }
+    const clean = raw.replace(/```json|```/g, '').trim();
+    let d;
+    try { d = JSON.parse(clean); }
+    catch(e) { const m = clean.match(/\{[\s\S]*\}/); if (m) d = JSON.parse(m[0]); else throw new Error('JSON parse failed'); }
 
-    let rawText = '';
-    for (const block of data.content) {
-      if (block.type === 'text') rawText += block.text;
-    }
-
-    const clean = rawText.replace(/```json|```/g, '').trim();
-    let siteData;
-    try {
-      siteData = JSON.parse(clean);
-    } catch(e) {
-      const jsonMatch = clean.match(/\{[\s\S]*\}/);
-      if (jsonMatch) siteData = JSON.parse(jsonMatch[0]);
-      else throw new Error('Could not parse response as JSON');
-    }
-
-    await new Promise(r => setTimeout(r, 400));
-    renderSite(siteData);
+    await new Promise(function(r){ setTimeout(r, 300); });
+    renderSite(d);
 
   } catch(err) {
-    clearInterval(stepInterval);
+    clearInterval(iv);
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('input-screen').style.display = 'flex';
-    showError('Generation failed: ' + err.message + '. Please try again.');
+    showErr('Generation failed: ' + err.message);
   }
 }
 
+/* ── RENDER ── */
 function renderSite(d) {
-  document.getElementById('hero-title').innerHTML = d.hero_title || 'Executive Search Briefing';
-  document.getElementById('hero-subtitle').textContent = d.hero_subtitle || '';
+  /* HERO */
+  const ht = document.getElementById('hero-title');
+  ht.innerHTML = esc(d.hero_title || 'Executive Search Briefing');
+  setText('hero-sub', d.hero_sub);
+  document.getElementById('hero-meta').innerHTML = (d.hero_meta || []).map(function(m) {
+    return '<div class="meta-item"><div class="meta-lbl">' + esc(m.label) + '</div><div class="meta-val">' + esc(m.value) + '</div></div>';
+  }).join('');
 
-  const metaEl = document.getElementById('hero-meta');
-  metaEl.innerHTML = (d.hero_meta || []).map(m =>
-    `<div class="hero-meta-item"><div class="hero-meta-label">${esc(m.label)}</div><div class="hero-meta-value">${esc(m.value)}</div></div>`
-  ).join('');
+  /* STATS */
+  document.getElementById('stat-row').innerHTML = (d.stats || []).map(function(s) {
+    return '<div class="stat-block"><div class="stat-num">' + esc(s.num) + '</div><div class="stat-lbl">' + esc(s.label) + '</div>' +
+      (s.ctx ? '<div class="stat-ctx">' + esc(s.ctx) + '</div>' : '') + '</div>';
+  }).join('');
 
-  const statEl = document.getElementById('stat-grid');
-  statEl.innerHTML = (d.stats || []).map(s =>
-    `<div class="stat-block"><div class="stat-number">${esc(s.number)}</div><div class="stat-label">${esc(s.label)}</div></div>`
-  ).join('');
-
-  setText('context-headline', d.context_headline);
-  setText('context-body', d.context_body);
-  setText('imperative-headline', d.imperative_headline);
-  setText('imperative-body', d.imperative_body);
-
-  const impPts = document.getElementById('imperative-points');
-  impPts.innerHTML = (d.imperative_points || []).map(p =>
-    `<div style="background:#fff; padding:1.75rem 1.5rem; position:relative;">
-      <div style="position:absolute; top:0; left:0; width:4px; height:100%; background:var(--cobalt);"></div>
-      <div style="font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700; text-transform:uppercase; color:var(--slate); margin-bottom:0.5rem;">${esc(p.title)}</div>
-      <div style="font-size:13px; color:#3A4A5E; line-height:1.65;">${esc(p.body)}</div>
-    </div>`
-  ).join('');
-
-  setText('paradox-headline', d.paradox_headline);
-  setText('paradox-body', d.paradox_body);
-
-  const venn = document.getElementById('venn-wrap');
-  if (d.venn_circles && d.venn_circles.length >= 3) {
-    venn.innerHTML = buildVenn(d.venn_circles, d.venn_center);
+  /* CONTEXT */
+  setText('ctx-head', d.ctx_head);
+  setHTML('ctx-body', d.ctx_body);
+  if (d.ctx_insight) {
+    document.getElementById('ctx-insight').style.display = 'block';
+    setText('ctx-insight-txt', d.ctx_insight);
+    setText('ctx-insight-src', d.ctx_insight_src || 'Caldwell Analysis');
   }
 
-  setText('failures-headline', d.failures_headline);
-  setText('failures-body', d.failures_body);
-
-  const tableWrap = document.getElementById('failures-table-wrap');
-  if (d.failure_modes && d.failure_modes.length) {
-    const header = `<table class="comparison-table">
-      <thead><tr>
-        <th>Criterion</th>
-        <th>${esc(d.failure_modes[0].archetype_a.name)}</th>
-        <th>${esc(d.failure_modes[0].archetype_b.name)}</th>
-        <th>${esc(d.failure_modes[0].ideal.name)}</th>
-      </tr></thead><tbody>`;
-    const rows = d.failure_modes.map(fm =>
-      `<tr>
-        <td>${esc(fm.criterion)}</td>
-        <td>${esc(fm.archetype_a.description)}</td>
-        <td>${esc(fm.archetype_b.description)}</td>
-        <td>${esc(fm.ideal.description)}</td>
-      </tr>`
-    ).join('');
-    tableWrap.innerHTML = header + rows + '</tbody></table>';
+  /* IMPERATIVE */
+  setText('imp-head', d.imp_head);
+  setHTML('imp-body', d.imp_body);
+  if (d.forces) {
+    document.getElementById('force-field').innerHTML =
+      '<div class="force-col">' +
+        '<div class="force-head push">' + esc(d.forces.push_head || 'Pressures Accelerating This Hire') + '</div>' +
+        (d.forces.push_items || []).map(function(i) {
+          return '<div class="force-item"><div class="force-dot push"></div><div>' + esc(i.text) + '</div></div>';
+        }).join('') +
+      '</div>' +
+      '<div class="force-col">' +
+        '<div class="force-head pull">' + esc(d.forces.pull_head || 'Constraints Making It Hard') + '</div>' +
+        (d.forces.pull_items || []).map(function(i) {
+          return '<div class="force-item"><div class="force-dot pull"></div><div>' + esc(i.text) + '</div></div>';
+        }).join('') +
+      '</div>';
   }
 
-  setText('caldwell-headline', d.caldwell_headline);
-  setText('caldwell-body', d.caldwell_body);
+  /* LANDSCAPE */
+  setText('land-head', d.land_head);
+  setHTML('land-body', d.land_body);
+  if (d.market_bars && d.market_bars.length) {
+    document.getElementById('chart-wrap').innerHTML =
+      '<div class="chart-title">' + esc(d.chart_title || 'CANDIDATE POOL RELEVANCE') + '</div>' +
+      buildBarChart(d.market_bars);
+  }
 
-  const diffGrid = document.getElementById('diff-grid');
-  diffGrid.innerHTML = (d.differentiators || []).map(df =>
-    `<div class="diff-block">
-      <div class="diff-accent"></div>
-      <div class="diff-number">${esc(df.number)}</div>
-      <div class="diff-title">${esc(df.title)}</div>
-      <div class="diff-body">${esc(df.body)}</div>
-    </div>`
-  ).join('');
+  /* PROFILE / RADAR */
+  setText('prof-head', d.prof_head);
+  setHTML('prof-body', d.prof_body);
+  if (d.radar_axes && d.radar_axes.length) {
+    document.getElementById('radar-wrap').innerHTML = buildRadar(d.radar_axes, d.radar_note);
+  }
 
-  const candGrid = document.getElementById('candidate-grid');
-  candGrid.innerHTML = (d.candidates || []).map(c =>
-    `<div class="candidate-card">
-      <div class="candidate-initial">${esc(c.initial)}</div>
-      <div class="candidate-archetype">${esc(c.archetype)}</div>
-      <div class="candidate-desc">${esc(c.description)}</div>
-      <div class="candidate-tags">${(c.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
-    </div>`
-  ).join('');
+  /* RISK */
+  setText('risk-head', d.risk_head);
+  setHTML('risk-body', d.risk_body);
+  const rm = document.getElementById('risk-matrix');
+  let rHtml = '';
+  (d.wrong_archetypes || []).forEach(function(a) {
+    rHtml += '<div class="risk-card wrong">' +
+      '<span class="risk-tag wrong">Wrong Hire</span>' +
+      '<div class="risk-name">' + esc(a.name) + '</div>' +
+      '<div class="risk-desc"><strong>Looks right because:</strong> ' + esc(a.why_attractive) + '</div>' +
+      '<div class="risk-desc" style="margin-top:.5rem;"><strong>Fails because:</strong> ' + esc(a.why_wrong) + '</div>' +
+      (a.signals && a.signals.length ? '<div class="risk-signals"><div class="risk-signals-lbl">Detection Signals</div>' +
+        a.signals.map(function(s) { return '<div class="risk-signal">— ' + esc(s) + '</div>'; }).join('') +
+      '</div>' : '') +
+    '</div>';
+  });
+  if (d.right_archetype) {
+    rHtml += '<div class="risk-card right">' +
+      '<span class="risk-tag right">Right Hire</span>' +
+      '<div class="risk-name">' + esc(d.right_archetype.name) + '</div>' +
+      '<div class="risk-desc">' + esc(d.right_archetype.description) + '</div>' +
+      (d.right_archetype.signals && d.right_archetype.signals.length ? '<div class="risk-signals"><div class="risk-signals-lbl">Positive Signals</div>' +
+        d.right_archetype.signals.map(function(s) { return '<div class="risk-signal">+ ' + esc(s) + '</div>'; }).join('') +
+      '</div>' : '') +
+    '</div>';
+  }
+  rm.innerHTML = rHtml;
 
-  setText('process-headline', d.process_headline);
-  setText('process-body', d.process_body);
+  /* CALDWELL */
+  setText('cald-head', d.cald_head);
+  setHTML('cald-body', d.cald_body);
+  document.getElementById('diff-grid').innerHTML = (d.differentiators || []).map(function(df) {
+    return '<div class="diff-block"><div class="diff-accent"></div><div class="diff-num">' + esc(df.num) +
+      '</div><div class="diff-title">' + esc(df.title) + '</div><div class="diff-body">' + esc(df.body) + '</div></div>';
+  }).join('');
+  document.getElementById('cand-grid').innerHTML = (d.candidates || []).map(function(c) {
+    return '<div class="cand-card"><div class="cand-initial">' + esc(c.initial) + '</div>' +
+      '<div class="cand-type">' + esc(c.archetype) + '</div>' +
+      '<div class="cand-why">' + esc(c.why) + '</div>' +
+      (c.tension ? '<div class="cand-why" style="margin-top:.4rem;"><strong>Probe:</strong> ' + esc(c.tension) + '</div>' : '') +
+      '<div style="margin-top:.6rem;">' + (c.tags || []).map(function(t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('') + '</div>' +
+    '</div>';
+  }).join('');
 
-  const timelineWrap = document.getElementById('timeline-wrap');
-  if (d.phases) timelineWrap.innerHTML = buildTimeline(d.phases);
+  /* PROCESS */
+  setText('proc-head', d.proc_head);
+  setHTML('proc-body', d.proc_body);
+  document.getElementById('tl-wrap').innerHTML = buildTimeline(d.phases || []);
 
+  /* CLOSE */
   const name = contactName || 'Shawn Banerji';
   const email = contactEmail || 'caldwell.com';
-  document.getElementById('close-name').textContent = name;
-  document.getElementById('close-email-line').textContent = email;
-  document.getElementById('close-quote').textContent = d.close_quote || '';
-  document.getElementById('footer-confidential').textContent = d.footer_confidential || `Confidential. Prepared exclusively for ${d.company || '[Client]'}. Not for distribution. © 2025 Caldwell Partners.`;
-
-  const mailSubject = encodeURIComponent(`${d.company || ''} ${d.role || ''} Search — Candidate Profiles`);
-  const mailBody = encodeURIComponent(`Hi ${name},\n\nI'd like to start a conversation about the ${d.role || 'executive'} search at ${d.company || 'your company'}.\n\nBest regards`);
-  document.getElementById('close-cta-link').href = `mailto:${email}?subject=${mailSubject}&body=${mailBody}`;
-  document.getElementById('nav-cta-btn').onclick = () => { window.location.href = `mailto:${email}?subject=${mailSubject}`; };
+  setText('cta-name', name);
+  setText('cta-email', email);
+  setText('cta-quote', d.close_quote || '');
+  setText('footer-conf', d.footer_conf || 'Confidential. Prepared exclusively for ' + (d.company || '[Client]') + '. Not for distribution. \u00a9 2025 Caldwell Partners.');
+  const subj = encodeURIComponent((d.company || '') + ' ' + (d.role || '') + ' Search');
+  document.getElementById('cta-link').href = 'mailto:' + email + '?subject=' + subj;
+  document.getElementById('nav-cta').onclick = function() { window.location.href = 'mailto:' + email + '?subject=' + subj; };
 
   document.getElementById('loading-screen').style.display = 'none';
   document.getElementById('site-screen').style.display = 'block';
-  window.scrollTo(0,0);
-
-  initScrollBehaviors();
+  window.scrollTo(0, 0);
+  initScroll();
 }
 
-function buildVenn(circles, center) {
-  const c = circles.slice(0,3);
-  return `<svg viewBox="0 0 440 300" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:480px;">
-    <defs>
-      <style>
-        .vc { fill-opacity:0.18; stroke-width:2; }
-        .vl { font-family:'Barlow Condensed',Impact,sans-serif; font-weight:700; font-size:13px; fill:#38495E; text-transform:uppercase; }
-        .vd { font-family:'Barlow',sans-serif; font-size:10px; fill:#747F8A; }
-        .vcl { font-family:'Barlow Condensed',Impact,sans-serif; font-weight:700; font-size:12px; fill:#304FFC; text-transform:uppercase; }
-      </style>
-    </defs>
-    <circle class="vc" cx="190" cy="135" r="110" fill="#304FFC" stroke="#304FFC"/>
-    <circle class="vc" cx="255" cy="135" r="110" fill="#91D62D" stroke="#91D62D"/>
-    <circle class="vc" cx="222" cy="185" r="110" fill="#38495E" stroke="#38495E"/>
-    <text class="vl" x="140" y="80" text-anchor="middle">${esc(c[0].label)}</text>
-    <text class="vl" x="306" y="80" text-anchor="middle">${esc(c[1].label)}</text>
-    <text class="vl" x="222" y="286" text-anchor="middle">${esc(c[2].label)}</text>
-    <text class="vcl" x="222" y="165" text-anchor="middle">${esc(center || 'THE OPERATOR')}</text>
-  </svg>`;
+/* ── DATA VIZ ── */
+function buildBarChart(bars) {
+  const max = Math.max.apply(null, bars.map(function(b) { return b.value; }));
+  const rowH = 44;
+  const labelW = 160;
+  const barMaxW = 380;
+  const h = bars.length * rowH + 20;
+  let svg = '<svg viewBox="0 0 ' + (labelW + barMaxW + 80) + ' ' + h + '" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:720px;">';
+  bars.forEach(function(b, i) {
+    const y = i * rowH + 10;
+    const bw = Math.round((b.value / max) * barMaxW);
+    const isTop = i === 0;
+    svg += '<text x="' + (labelW - 8) + '" y="' + (y + 16) + '" text-anchor="end" font-family="Barlow Condensed, sans-serif" font-size="12" font-weight="700" fill="#38495E" text-transform="uppercase">' + esc(b.label) + '</text>';
+    svg += '<rect x="' + labelW + '" y="' + y + '" width="' + bw + '" height="22" fill="' + (isTop ? '#304FFC' : (bw > barMaxW * 0.5 ? '#5B77FD' : '#B8C4FE')) + '"/>';
+    svg += '<text x="' + (labelW + bw + 6) + '" y="' + (y + 15) + '" font-family="Barlow Condensed, sans-serif" font-size="12" font-weight="700" fill="#304FFC">' + b.value + '</text>';
+    if (b.note) {
+      svg += '<text x="' + labelW + '" y="' + (y + 34) + '" font-family="Barlow, sans-serif" font-size="9" fill="#747F8A">' + esc(b.note) + '</text>';
+    }
+  });
+  svg += '</svg>';
+  return svg;
+}
+
+function buildRadar(axes, note) {
+  const cx = 160, cy = 160, r = 120;
+  const n = axes.length;
+  function pt(val, idx, radius) {
+    const angle = (Math.PI * 2 * idx / n) - Math.PI / 2;
+    const d = (val / 100) * radius;
+    return { x: cx + d * Math.cos(angle), y: cy + d * Math.sin(angle) };
+  }
+  const rings = [25, 50, 75, 100];
+  let svg = '<svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;">';
+  rings.forEach(function(ring) {
+    const pts = axes.map(function(_, i) { return pt(ring, i, r); });
+    svg += '<polygon points="' + pts.map(function(p) { return p.x + ',' + p.y; }).join(' ') + '" fill="none" stroke="#E4E8EF" stroke-width="1"/>';
+  });
+  axes.forEach(function(_, i) {
+    const p = pt(100, i, r);
+    svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + p.x + '" y2="' + p.y + '" stroke="#E4E8EF" stroke-width="1"/>';
+  });
+  const typPts = axes.map(function(a, i) { return pt(a.typical, i, r); });
+  svg += '<polygon points="' + typPts.map(function(p) { return p.x + ',' + p.y; }).join(' ') + '" fill="rgba(116,127,138,.15)" stroke="#747F8A" stroke-width="1.5"/>';
+  const idealPts = axes.map(function(a, i) { return pt(a.ideal, i, r); });
+  svg += '<polygon points="' + idealPts.map(function(p) { return p.x + ',' + p.y; }).join(' ') + '" fill="rgba(48,79,252,.12)" stroke="#304FFC" stroke-width="2"/>';
+  axes.forEach(function(a, i) {
+    const lp = pt(115, i, r);
+    svg += '<text x="' + lp.x + '" y="' + lp.y + '" text-anchor="middle" dominant-baseline="middle" font-family="Barlow Condensed, sans-serif" font-size="10" font-weight="700" fill="#38495E" text-transform="uppercase">' + esc(a.label) + '</text>';
+  });
+  svg += '</svg>';
+
+  const legend = '<div class="radar-legend">' +
+    '<div class="legend-item"><div class="legend-dot" style="background:#304FFC;"></div><div><strong style="color:#38495E;">Ideal Profile</strong><br>What this role demands</div></div>' +
+    '<div class="legend-item"><div class="legend-dot" style="background:#747F8A;"></div><div><strong style="color:#38495E;">Typical Senior Candidate</strong><br>Market baseline</div></div>' +
+    (note ? '<div style="margin-top:.75rem;font-size:12px;color:#3A4A5E;line-height:1.55;border-left:3px solid #304FFC;padding-left:.75rem;">' + esc(note) + '</div>' : '') +
+  '</div>';
+
+  return '<div style="display:flex;align-items:center;gap:2rem;flex-wrap:wrap;">' + svg + legend + '</div>';
 }
 
 function buildTimeline(phases) {
-  const phaseDivs = phases.map((p, i) =>
-    `<div class="timeline-phase">
-      <div class="timeline-node" id="tn-${i}"></div>
-      <div class="timeline-phase-name">${esc(p.name)}</div>
-      <div class="timeline-phase-week">${esc(p.week)}</div>
-      <div class="timeline-phase-desc">${esc(p.description)}</div>
-    </div>`
-  ).join('');
-  return `<div class="timeline-track" id="timeline-track">
-    <div class="timeline-line"></div>
-    <div class="timeline-progress" id="timeline-prog"></div>
-    ${phaseDivs}
-  </div>`;
+  const nodes = phases.map(function(p, i) {
+    return '<div class="tl-phase">' +
+      '<div class="tl-node" id="tn-' + i + '"></div>' +
+      '<div class="tl-name">' + esc(p.name) + '</div>' +
+      '<div class="tl-wk">' + esc(p.week) + '</div>' +
+      '<div class="tl-desc">' + esc(p.desc) + '</div>' +
+    '</div>';
+  }).join('');
+  return '<div class="tl-track" id="tl-track">' +
+    '<div class="tl-line"></div>' +
+    '<div class="tl-prog" id="tl-prog"></div>' +
+    nodes +
+  '</div>';
 }
 
-function initScrollBehaviors() {
-  const sections = document.querySelectorAll('.site-section');
-  const navLinks = document.querySelectorAll('.nav-link');
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
+/* ── SCROLL ── */
+function initScroll() {
+  const secs = document.querySelectorAll('.sec');
+  const obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
       if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        if (e.target.id === 's-process') {
-          setTimeout(() => animateTimeline(), 300);
-        }
+        e.target.classList.add('vis');
+        if (e.target.id === 's-process') setTimeout(animateTL, 300);
       }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.08 });
+  secs.forEach(function(s) { obs.observe(s); });
 
-  sections.forEach(s => observer.observe(s));
-
-  window.addEventListener('scroll', () => {
+  const navSecs = ['s-context','s-imperative','s-landscape','s-profile','s-risk','s-caldwell','s-process'];
+  window.addEventListener('scroll', function() {
     const scrolled = window.scrollY;
     const total = document.body.scrollHeight - window.innerHeight;
-    const pct = total > 0 ? (scrolled / total) * 100 : 0;
-    document.getElementById('nav-progress').style.width = pct + '%';
-
-    const sectionEls = ['s-context','s-imperative','s-paradox','s-failures','s-caldwell','s-process'];
+    document.getElementById('nav-prog').style.width = (total > 0 ? (scrolled / total) * 100 : 0) + '%';
     let active = '';
-    sectionEls.forEach(id => {
+    navSecs.forEach(function(id) {
       const el = document.getElementById(id);
-      if (el && el.getBoundingClientRect().top < 120) active = id;
+      if (el && el.getBoundingClientRect().top < 110) active = id;
     });
-
-    navLinks.forEach(l => {
-      const href = l.getAttribute('href').replace('#','');
-      l.classList.toggle('active', href === active);
+    document.querySelectorAll('.nav-link').forEach(function(l) {
+      l.classList.toggle('on', l.getAttribute('href') === '#' + active);
     });
   });
 }
 
-function animateTimeline() {
-  const prog = document.getElementById('timeline-prog');
-  const track = document.getElementById('timeline-track');
+function animateTL() {
+  const prog = document.getElementById('tl-prog');
+  const track = document.getElementById('tl-track');
   if (!prog || !track) return;
   prog.style.width = '100%';
-  const nodes = track.querySelectorAll('.timeline-node');
-  nodes.forEach((n, i) => {
-    setTimeout(() => n.classList.add('filled'), i * 180);
+  track.querySelectorAll('.tl-node').forEach(function(n, i) {
+    setTimeout(function() { n.classList.add('on'); }, i * 160);
   });
 }
 
-function exportPDF() {
-  window.print();
-}
-
-function navCTA() {
-  const email = contactEmail || 'caldwell.com';
-  window.location.href = `mailto:${email}`;
-}
-
+/* ── UI HELPERS ── */
 function backToInput() {
   document.getElementById('site-screen').style.display = 'none';
   document.getElementById('input-screen').style.display = 'flex';
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
-
-function toggleMobileMenu() {
-  document.getElementById('mobile-menu').classList.toggle('open');
-}
-
-function closeMobileMenu() {
-  document.getElementById('mobile-menu').classList.remove('open');
-}
-
-function setText(id, val) {
+function toggleMob() { document.getElementById('mob-menu').classList.toggle('open'); }
+function closeMob() { document.getElementById('mob-menu').classList.remove('open'); }
+function setText(id, val) { const el = document.getElementById(id); if (el && val) el.textContent = val; }
+function setHTML(id, val) {
   const el = document.getElementById(id);
-  if (el && val) el.textContent = val;
+  if (el && val) el.innerHTML = val.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
 }
-
 function esc(str) {
   if (!str) return '';
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
-function showError(msg) {
-  const el = document.getElementById('error-msg');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
-function hideError() {
-  document.getElementById('error-msg').style.display = 'none';
-}
+function showErr(msg) { const e = document.getElementById('err-msg'); e.textContent = msg; e.style.display = 'block'; }
+function hideErr() { document.getElementById('err-msg').style.display = 'none'; }
 </script>
 </body>
 </html>
