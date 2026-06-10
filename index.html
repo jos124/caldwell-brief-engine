@@ -1492,8 +1492,8 @@ Return ONLY a valid JSON object. No markdown fences, no preamble.`;
 
     // Build links section for prompt
     const linksSection = links.length > 0
-      ? `\n\nFEATURED LINKS (incorporate these into the briefing — cite press coverage, reference sources, use company URLs for accurate facts):\n` +
-        links.map(l => `- [${l.type.toUpperCase()}] ${l.url}${l.note ? \` (${l.note})\` : ''}`).join('\n')
+      ? '\n\nFEATURED LINKS (incorporate these into the briefing — cite press coverage, reference sources, use company URLs for accurate facts):\n' +
+        links.map(function(l) { return '- [' + l.type.toUpperCase() + '] ' + l.url + (l.note ? ' (' + l.note + ')' : ''); }).join('\n')
       : '';
 
     const userPrompt = `Based on this executive search brief, generate a complete Caldwell Partners briefing site. Extract all available facts and synthesise what's missing with expert judgment. Every section should be insight-dense, specific, and defensible.
